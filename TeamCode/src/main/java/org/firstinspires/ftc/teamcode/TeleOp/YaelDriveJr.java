@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode.TeleOp.TourneyPrograms;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
+/*import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;*/
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
@@ -19,6 +19,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 public class YaelDriveJr extends LinearOpMode{
     @Override
     public void runOpMode() {
+        /////////////// MOTORS //////////////////
         // Motor Setup
         DcMotor leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
         DcMotor leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
@@ -37,9 +38,13 @@ public class YaelDriveJr extends LinearOpMode{
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
+        //////////// SERVOS ////////////
+        Servo grabber = hardwareMap.get(Servo.class, "grabber_servo");
+
+        /////////// OTHER /////////////
         // Set up FtcDashboard telemetry
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        Telemetry dashboardTelemetry = dashboard.getTelemetry();
+        /*FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry dashboardTelemetry = dashboard.getTelemetry();*/
 
         double changeInSpeed = 0.2;
 
@@ -50,6 +55,8 @@ public class YaelDriveJr extends LinearOpMode{
 
         while (opModeIsActive()) {
             /* Define control variables */
+            // Claw
+            boolean grab = gamepad2.b;
 
             // Drive
             double axial   = -gamepad1.left_stick_y;
@@ -95,6 +102,15 @@ public class YaelDriveJr extends LinearOpMode{
                 rightBack  *= changeInSpeed;
             }
 
+            // Grabbing
+            if (grab) {
+                if (grabber.getPosition() == 1) {
+                    grabber.setPosition(0);
+                }else{
+                    grabber.setPosition(1);
+                }
+            }
+
             // Associates buttons/joysticks to motors/servos:
             // Wheels
             leftFrontDrive.setPower(leftFront);
@@ -104,7 +120,7 @@ public class YaelDriveJr extends LinearOpMode{
 
             //dashboardTelemetry.addData("Left Slide Pos: ", leftLinearSlide.getCurrentPosition());
             //dashboardTelemetry.addData("Right Slide Pos: ", rightLinearSlide.getCurrentPosition());
-            dashboardTelemetry.update();
+            //dashboardTelemetry.update();
         }
     }
 }
