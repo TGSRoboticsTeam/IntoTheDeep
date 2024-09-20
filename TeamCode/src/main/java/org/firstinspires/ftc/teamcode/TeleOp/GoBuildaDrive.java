@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode.TeleOp.TourneyPrograms;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
-import com.acmerobotics.dashboard.FtcDashboard;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
+//import com.acmerobotics.dashboard.FtcDashboard;
+//import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -20,7 +20,7 @@ public class GoBuildaDrive extends LinearOpMode {
     public void runOpMode() {
         // Yo, what is up Ethan :)
 
-        GamepadEx gamepadEx = new GamepadEx(gamepad2);
+        //GamepadEx gamepadEx = new GamepadEx(gamepad2);
 
         // Motor Setup
         DcMotor leftFrontDrive = hardwareMap.get(DcMotor.class, "front_Left");
@@ -41,8 +41,8 @@ public class GoBuildaDrive extends LinearOpMode {
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         // Set up FtcDashboard telemetry
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        Telemetry dashboardTelemetry = dashboard.getTelemetry();
+        //FtcDashboard dashboard = FtcDashboard.getInstance();
+        //Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
         double changeInSpeed = 0.2;
 
