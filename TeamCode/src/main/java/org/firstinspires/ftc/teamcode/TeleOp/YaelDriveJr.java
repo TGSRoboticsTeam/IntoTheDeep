@@ -57,6 +57,7 @@ public class YaelDriveJr extends LinearOpMode{
             /* Define control variables */
             // Claw
             boolean grab = gamepad2.b;
+            boolean justGrabbed = false;
 
             // Drive
             double axial   = -gamepad1.left_stick_y;
@@ -103,12 +104,15 @@ public class YaelDriveJr extends LinearOpMode{
             }
 
             // Grabbing
-            if (grab) {
+            if (grab && !justGrabbed) {
+                justGrabbed = true;
                 if (grabber.getPosition() == 1) {
                     grabber.setPosition(0);
                 }else{
-                    grabber.setPosition(1);
+                    grabber.setPosition(0.5);
                 }
+            }else{
+                justGrabbed = false;
             }
 
             // Associates buttons/joysticks to motors/servos:
