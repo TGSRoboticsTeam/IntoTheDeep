@@ -55,6 +55,8 @@ public class YaelDriveJr extends LinearOpMode{
 
         while (opModeIsActive()) {
             /* Define control variables */
+            double constantSlowDown = 0.5;
+
             // Claw
             boolean grab = gamepad2.b;
             boolean justGrabbed = false;
@@ -101,6 +103,11 @@ public class YaelDriveJr extends LinearOpMode{
                 rightFront *= changeInSpeed;
                 leftBack   *= changeInSpeed;
                 rightBack  *= changeInSpeed;
+            }else{
+                leftFront  *= constantSlowDown;
+                rightFront *= constantSlowDown;
+                leftBack   *= constantSlowDown;
+                rightBack  *= constantSlowDown;
             }
 
             // Grabbing
