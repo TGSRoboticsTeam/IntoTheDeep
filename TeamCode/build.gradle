@@ -21,6 +21,12 @@ android {
     packagingOptions {
         jniLibs.useLegacyPackaging true
     }
+
+    sourceSets{
+        main{
+            java.srcDirs=['src/main/java','java/org/firstinspires/ftc/teamcode/Objects']
+        }
+    }
 }
 
 dependencies {

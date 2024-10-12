@@ -1,10 +1,10 @@
-package org.firstinspires.ftc.teamcode.Objects;
+package org.firstinspires.ftc.teamcode.Auto;
 
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
-public class Drive extends LinearOpMode {
+public class Drive extends LinearOpMode{
     private DcMotor leftFrontDrive = null;
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
@@ -13,8 +13,10 @@ public class Drive extends LinearOpMode {
     // speed constants
     private double speed;
     private double turnSpeed;
-    ElapsedTime timer;
-    @Override
+    ElapsedTime timer = new ElapsedTime();
+    public Drive(){
+        runOpMode();
+    }
     public void runOpMode() {
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
@@ -35,6 +37,7 @@ public class Drive extends LinearOpMode {
 
          timer = new ElapsedTime();
     }
+
     public void drive(int vertical,int horizontal){
             // Drive
             double axial = -vertical;
