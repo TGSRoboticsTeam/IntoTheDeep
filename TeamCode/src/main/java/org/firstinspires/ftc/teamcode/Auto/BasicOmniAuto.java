@@ -115,10 +115,9 @@ public class BasicOmniAuto extends LinearOpMode {
        //driveByTime(-.25,4);
        //strafeByTime(-.5,4);
         //dropAndTouch3();
-       hi();
-
-
-
+        hi();
+        telemetry.addData("Testing...");
+        telemetry.update();
 
 
 
@@ -179,6 +178,17 @@ public class BasicOmniAuto extends LinearOpMode {
         // diagByTime(-.25,-.5,3); forward left
 
 
+    }
+
+    public void rotateByTime(double power, int direction, double time) {
+        // Send calculated power to wheels
+        runtime.reset();
+        while(runtime.seconds() < time) {
+            leftFrontDrive.setPower(power * direction);
+            rightFrontDrive.setPower(-power * direction);
+            leftBackDrive.setPower(-power * direction);
+            rightBackDrive.setPower(power * direction);
+        }
     }
     public void dropAndTouch(){
         // }
