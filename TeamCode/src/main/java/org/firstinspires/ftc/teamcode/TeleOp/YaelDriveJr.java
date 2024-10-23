@@ -56,6 +56,7 @@ public class YaelDriveJr extends LinearOpMode{
         while (opModeIsActive()) {
             /* Define control variables */
             double constantSlowDown = 0.5;
+            double maximumMoveSpeed = 0.8;
 
             // Claw
             boolean grab = gamepad2.b;
@@ -91,7 +92,7 @@ public class YaelDriveJr extends LinearOpMode{
             max = Math.max(max, Math.abs(leftBack));
             max = Math.max(max, Math.abs(rightBack));
 
-            if (max > 1.0) {
+            if (max > maximumMoveSpeed) {
                 leftFront  /= max;
                 rightFront /= max;
                 leftBack   /= max;

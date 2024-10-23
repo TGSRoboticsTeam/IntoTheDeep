@@ -76,7 +76,7 @@ public class Drive extends LinearOpMode{
             rightBackDrive.setPower(rightBack);
         }
 
-        public void rotate( int direction){
+        public void rotate(int direction){
             // Drive
             double yaw = direction;
 
@@ -108,7 +108,7 @@ public class Drive extends LinearOpMode{
             rightFrontDrive.setPower(rightFront);
             rightBackDrive.setPower(rightBack);
         }
-        public void rotateTime(double seconds,int dir){
+        public void rotateTime(double seconds, int dir){
             timer.reset();
             while (timer.seconds() <= seconds) {
                 rotate(dir);
@@ -121,9 +121,6 @@ public class Drive extends LinearOpMode{
 
         public void rotateRight() {
             rotateTime(1, 1);
-        }
-        public void rotateDegrees(double degrees){
-
         }
 
         public void driveForward(double seconds){

@@ -100,8 +100,8 @@ public class BasicOmniAuto extends LinearOpMode {
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses START)
-        telemetry.addData("Status", "Initialized");
-        telemetry.update();
+        //telemetry.addData("Status", "Initialized");
+        //telemetry.update();
 
         waitForStart();
         runtime.reset();
@@ -116,8 +116,8 @@ public class BasicOmniAuto extends LinearOpMode {
        //strafeByTime(-.5,4);
         //dropAndTouch3();
         hi();
-        telemetry.addData("Testing...");
-        telemetry.update();
+        //telemetry.addData("Testing...");
+        //telemetry.update();
 
 
 
