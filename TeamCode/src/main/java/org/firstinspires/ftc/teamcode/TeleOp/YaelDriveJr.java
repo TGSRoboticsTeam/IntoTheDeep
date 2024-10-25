@@ -1,7 +1,7 @@
-package org.firstinspires.ftc.teamcode.TeleOp.TourneyPrograms;
+package org.firstinspires.ftc.teamcode.TeleOp;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.arcrobotics.ftclib.gamepad.GamepadEx;
+//import com.arcrobotics.ftclib.gamepad.GamepadEx;
 import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
@@ -18,7 +18,7 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 public class YaelDriveJr extends LinearOpMode {
     @Override
     public void runOpMode() {
-        GamepadEx gamepadEx = new GamepadEx(gamepad2);
+        //GamepadEx gamepadEx = new GamepadEx(gamepad2);
 
         // Motor Setup
         DcMotor leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
@@ -98,8 +98,8 @@ public class YaelDriveJr extends LinearOpMode {
             rightFrontDrive.setPower(frontRightPower);
             rightBackDrive.setPower(backRightPower);
 
-            telemetry.addData("Left Slide Encoder: ", linearSlides.getLeftSlideEncoder());
-            telemetry.addData("Right Slide Encoder: ", linearSlides.getRightSlideEncoder());
+            /*telemetry.addData("Left Slide Encoder: ", linearSlides.getLeftSlideEncoder());
+            telemetry.addData("Right Slide Encoder: ", linearSlides.getRightSlideEncoder());*/
             telemetry.update();
         }
     }
