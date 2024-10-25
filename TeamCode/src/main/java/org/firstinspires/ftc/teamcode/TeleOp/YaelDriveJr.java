@@ -1,25 +1,25 @@
-package org.firstinspires.ftc.teamcode.TeleOp;
+package org.firstinspires.ftc.teamcode.TeleOp.TourneyPrograms;
 
-/*import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;*/
+import com.acmerobotics.dashboard.FtcDashboard;
+import com.arcrobotics.ftclib.gamepad.GamepadEx;
+import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
-import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.hardware.CRServo;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.ServoImpl;
-import com.qualcomm.robotcore.util.ElapsedTime;
+import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
-@TeleOp(name = "Yael Drive", group = "Yael Drive")
-//@Disabled
-public class YaelDriveJr extends LinearOpMode{
+@Disabled
+@TeleOp(name = "YaelDriveJr", group = "YaelDriveJr")
+
+public class YaelDriveJr extends LinearOpMode {
     @Override
     public void runOpMode() {
-        /////////////// MOTORS //////////////////
+        GamepadEx gamepadEx = new GamepadEx(gamepad2);
+
         // Motor Setup
         DcMotor leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
         DcMotor leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
@@ -38,101 +38,70 @@ public class YaelDriveJr extends LinearOpMode{
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        //////////// SERVOS ////////////
-        Servo grabber = hardwareMap.get(Servo.class, "grabber_servo");
-
-        /////////// OTHER /////////////
         // Set up FtcDashboard telemetry
-        /*FtcDashboard dashboard = FtcDashboard.getInstance();
-        Telemetry dashboardTelemetry = dashboard.getTelemetry();*/
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
         double changeInSpeed = 0.2;
 
-        // Need this so that the code will stay initialized until you hit play on the phone
+        // Retrieve the IMU from the hardware map
+        IMU imu = hardwareMap.get(IMU.class, "imu");
+        // Adjust the orientation parameters to match your robot
+        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
+                RevHubOrientationOnRobot.LogoFacingDirection.LEFT, // Change to left if doesn't work
+                RevHubOrientationOnRobot.UsbFacingDirection.UP));
+        // Without this, the REV Hub's orientation is assumed to be logo up / USB forward
+        imu.initialize(parameters);
+
         while (!isStarted()) {
 
         }
 
         while (opModeIsActive()) {
-            /* Define control variables */
-            double constantSlowDown = 0.5;
-            double maximumMoveSpeed = 0.8;
-
-            // Claw
-            boolean grab = gamepad2.b;
-            boolean justGrabbed = false;
-
+            // Define joystick controls
             // Drive
-            double axial   = -gamepad1.left_stick_y;
-            double lateral =  gamepad1.left_stick_x;
-            double yaw     =  gamepad1.right_stick_x;
+
+            double y   = -gamepad1.left_stick_y;
+            double x   =  gamepad1.left_stick_x;
+            double rx  =  gamepad1.right_stick_x;
 
             boolean slowDown = gamepad1.left_bumper;
 
-            if (axial <= 0.1 && axial >= -0.1) {
-                axial = 0;
+            if(gamepad1.dpad_up){
+                imu.resetYaw();
             }
 
-            if (lateral <= 0.1 && lateral >= -0.1) {
-                lateral = 0;
-            }
+            double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-            if (yaw <= 0.1 && yaw >= -0.1) {
-                yaw = 0;
-            }
+            // Rotate the movement direction counter to the bots rotation
+            double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
+            double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
 
-            // Gives the joystick commands purpose, "mecanum" wheel stuff or whatever
-            double rightFront = axial - lateral - yaw;
-            double rightBack  = axial + lateral - yaw;
-            double leftBack   = axial - lateral + yaw;
-            double leftFront  = axial + lateral + yaw;
-            double max;
-
-            max = Math.max(Math.abs(leftFront), Math.abs(rightFront));
-            max = Math.max(max, Math.abs(leftBack));
-            max = Math.max(max, Math.abs(rightBack));
-
-            if (max > maximumMoveSpeed) {
-                leftFront  /= max;
-                rightFront /= max;
-                leftBack   /= max;
-                rightBack  /= max;
-            }
+            // Denominator is the largest motor power (absolute value) or 1
+            // This ensures all the powers maintain the same ratio, but only when
+            // at least one is out of the range [-1, 1]
+            double denominator = Math.max(Math.abs(rotY) + Math.abs(rotX) + Math.abs(rx), 1);
+            double frontLeftPower = (rotY + rotX + rx) / denominator;
+            double backLeftPower = (rotY - rotX + rx) / denominator;
+            double frontRightPower = (rotY - rotX - rx) / denominator;
+            double backRightPower = (rotY + rotX - rx) / denominator;
 
             if (slowDown){
-                leftFront  *= changeInSpeed;
-                rightFront *= changeInSpeed;
-                leftBack   *= changeInSpeed;
-                rightBack  *= changeInSpeed;
-            }else{
-                leftFront  *= constantSlowDown;
-                rightFront *= constantSlowDown;
-                leftBack   *= constantSlowDown;
-                rightBack  *= constantSlowDown;
+                frontLeftPower  *= changeInSpeed;
+                frontRightPower *= changeInSpeed;
+                backLeftPower   *= changeInSpeed;
+                backRightPower  *= changeInSpeed;
             }
 
-            // Grabbing
-            if (grab && !justGrabbed) {
-                justGrabbed = true;
-                if (grabber.getPosition() == 1) {
-                    grabber.setPosition(0);
-                }else{
-                    grabber.setPosition(0.5);
-                }
-            }else{
-                justGrabbed = false;
-            }
+            leftFrontDrive.setPower(frontLeftPower);
+            leftBackDrive.setPower(backLeftPower);
+            rightFrontDrive.setPower(frontRightPower);
+            rightBackDrive.setPower(backRightPower);
 
-            // Associates buttons/joysticks to motors/servos:
-            // Wheels
-            leftFrontDrive.setPower(leftFront);
-            leftBackDrive.setPower(leftBack);
-            rightFrontDrive.setPower(rightFront);
-            rightBackDrive.setPower(rightBack);
-
-            //dashboardTelemetry.addData("Left Slide Pos: ", leftLinearSlide.getCurrentPosition());
-            //dashboardTelemetry.addData("Right Slide Pos: ", rightLinearSlide.getCurrentPosition());
-            //dashboardTelemetry.update();
+            telemetry.addData("Left Slide Encoder: ", linearSlides.getLeftSlideEncoder());
+            telemetry.addData("Right Slide Encoder: ", linearSlides.getRightSlideEncoder());
+            telemetry.update();
         }
     }
 }
+
