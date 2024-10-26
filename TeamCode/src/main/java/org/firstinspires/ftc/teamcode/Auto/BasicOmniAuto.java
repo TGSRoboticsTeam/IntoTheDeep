@@ -115,13 +115,24 @@ public class BasicOmniAuto extends LinearOpMode {
        //driveByTime(-.25,4);
        //strafeByTime(-.5,4);
         //dropAndTouch3();
-        hi();
+        krabbyPatty();
+        while(runtime.seconds() < 30) {
+        }
+        runtime.reset();
+        fishy();
+        while(runtime.seconds() < 30) {
+        }
+        runtime.reset();
+        fishHook();
+
+    }
+
         //telemetry.addData("Testing...");
         //telemetry.update();
 
 
 
-    }
+
     public void driveByTime(double power,double time ){
             // Send calculated power to wheels
         runtime.reset();
@@ -141,6 +152,7 @@ public class BasicOmniAuto extends LinearOpMode {
     }
     public void strafeByTime(double power,double time ){
         // Send calculated power to wheels
+        //move sideways
         runtime.reset();
         while(runtime.seconds() < time) {
             leftFrontDrive.setPower(power);
@@ -190,17 +202,8 @@ public class BasicOmniAuto extends LinearOpMode {
             rightBackDrive.setPower(power * direction);
         }
     }
-    public void dropAndTouch(){
-        // }
-        strafeByTime(.25,0.25);//right off the wall
-        driveByTime(.25,4);//forward
-        strafeByTime(.25,2);//right
-        driveByTime(-.25,2);//back
-        strafeByTime(.25,2);
-        driveByTime(-.25,2);//back
 
-    }
-    public void dropAndTouch3(){
+    public void lightHouse(){
         strafeByTime(.25,0.25);//right off the wall
         driveByTime(.25,5);//forward
         strafeByTime(.25,2);//right
@@ -209,18 +212,62 @@ public class BasicOmniAuto extends LinearOpMode {
         driveByTime(-.25,2);//back
 
     }
-    public void vortexY(){
+    public void vortex(){
         driveByTime(.25,4);
         diagByTime(.25,.75,1.5); //back right
     }
-    public void hi(){
+    public void jellyfishC(){
         driveByTime(.25,0.25);//forward off the wall
         strafeByTime(-.25, 2.5);
         driveByTime(.25,3.25);
         strafeByTime(-.25,1);
-        diagByTime(-.5,-.4,2); //back left
+        diagByTime(-.5,-.3,2); //back left
         //make the diag less steep
     }
+    public void dock(){
+        driveByTime(.5,1.5);
+    }
+    public void fishy(){
+        //drop off specimen and park
+        driveByTime(.5,1.5);
+        driveByTime(0,3); //wait
+        diagByTime(.25,.5,1.5); //back right
+    }
+    public void fishHook(){
+        //specimen and level1 ascent
+        driveByTime(.5,1.5);
+        driveByTime(0,3);
+        strafeByTime(-.5,1.5);
+        driveByTime(.5,1);
+        strafeByTime(.5,.7);
+    }
+    public void MrKrabs(){
+        //specimen and sample and level1 ascent
+        driveByTime(.5,1.5);
+        driveByTime(0,1.5);
+        strafeByTime(-.5,.7);
+        driveByTime(.5,1);
+        strafeByTime(-.5,.7);
+        diagByTime(-.5,-.35,1);
+        diagByTime(.5,.35,1);
+        strafeByTime(.5,2.5);
+    }
+    public void krabbyPatty(){
+        //Mr. Krabs with another sample
+        driveByTime(.25,1.5);
+        driveByTime(0,1.5);
+        strafeByTime(-.4,.7);
+        driveByTime(.25,1);
+        strafeByTime(-.25,.7);
+        diagByTime(-.5,-.15,2);
+        diagByTime(.5,.15,1);
+        strafeByTime(-.25,.5);
+        diagByTime(-.5,-.15,2);
+        diagByTime(.5,.15,1);
+        strafeByTime(.25,2.5);
+    }
+
+
 
 
 
