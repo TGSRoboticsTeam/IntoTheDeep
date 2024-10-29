@@ -94,6 +94,20 @@ public class YaelDriveJr extends LinearOpMode {
                 backRightPower  *= changeInSpeed;
             }
 
+            double roundDown = 0.2;
+            if (frontLeftPower <= roundDown) {
+                frontLeftPower = 0
+            }
+            if (frontRightPower <= roundDown) {
+                frontRightPower = 0
+            }
+            if (backLeftPower <= roundDown) {
+                backLeftPower = 0
+            }
+            if (backRightPower <= roundDown) {
+                backRightPower = 0
+            }
+
             leftFrontDrive.setPower(frontLeftPower);
             leftBackDrive.setPower(backLeftPower);
             rightFrontDrive.setPower(frontRightPower);
