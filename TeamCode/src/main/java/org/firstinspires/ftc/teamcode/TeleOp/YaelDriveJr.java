@@ -96,16 +96,16 @@ public class YaelDriveJr extends LinearOpMode {
 
             double roundDown = 0.2;
             if (frontLeftPower <= roundDown) {
-                frontLeftPower = 0
+                frontLeftPower = 0;
             }
             if (frontRightPower <= roundDown) {
-                frontRightPower = 0
+                frontRightPower = 0;
             }
             if (backLeftPower <= roundDown) {
-                backLeftPower = 0
+                backLeftPower = 0;
             }
             if (backRightPower <= roundDown) {
-                backRightPower = 0
+                backRightPower = 0;
             }
 
             leftFrontDrive.setPower(frontLeftPower);
@@ -116,10 +116,10 @@ public class YaelDriveJr extends LinearOpMode {
             /*telemetry.addData("Left Slide Encoder: ", linearSlides.getLeftSlideEncoder());
             telemetry.addData("Right Slide Encoder: ", linearSlides.getRightSlideEncoder());*/
             YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-            dashboardTelemetry.addData("Pitch (X)", "%.2f", orientation.getPitch(AngleUnit.DEGREES));
-            dashboardTelemetry.addData("Roll (Y)", "%.2f", orientation.getRoll(AngleUnit.DEGREES));
-            dashboardTelemetry.addData("Yaw (Z)", "%.2f", orientation.getYaw(AngleUnit.DEGREES));
-            dashboardTelemetry.update();
+            telemetry.addData("Pitch (X)", "%.2f", orientation.getPitch(AngleUnit.DEGREES));
+            telemetry.addData("Roll (Y)", "%.2f", orientation.getRoll(AngleUnit.DEGREES));
+            telemetry.addData("Yaw (Z)", "%.2f", orientation.getYaw(AngleUnit.DEGREES));
+            telemetry.update();
         }
     }
 }
