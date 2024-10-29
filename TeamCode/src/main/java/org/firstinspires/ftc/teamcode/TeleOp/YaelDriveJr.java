@@ -74,11 +74,6 @@ public class YaelDriveJr extends LinearOpMode {
 
             double botHeading = imu.getRobotYawPitchRollAngles().getYaw(AngleUnit.RADIANS);
 
-
-            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
-            dashboardTelemetry.addData("Yaw (Z)", "%.2f", orientation.getYaw(AngleUnit.DEGREES));
-            dashboardTelemetry.update();
-
             // Rotate the movement direction counter to the bots rotation
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
@@ -106,7 +101,9 @@ public class YaelDriveJr extends LinearOpMode {
 
             /*telemetry.addData("Left Slide Encoder: ", linearSlides.getLeftSlideEncoder());
             telemetry.addData("Right Slide Encoder: ", linearSlides.getRightSlideEncoder());*/
-            telemetry.update();
+            YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
+            dashboardTelemetry.addData("Yaw (Z)", "%.2f", orientation.getYaw(AngleUnit.DEGREES));
+            dashboardTelemetry.update();
         }
     }
 }
