@@ -103,6 +103,8 @@ public class YaelDriveJr extends LinearOpMode {
             telemetry.addData("Right Slide Encoder: ", linearSlides.getRightSlideEncoder());*/
             YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
             dashboardTelemetry.addData("Yaw (Z)", "%.2f", orientation.getYaw(AngleUnit.DEGREES));
+            dashboardTelemetry.addData("Pitch (?)", "%.2f", orientation.getPitch(AngleUnit.DEGREES));
+            dashboardTelemetry.addData("Roll (?)", "%.2f", orientation.getRoll(AngleUnit.DEGREES));
             dashboardTelemetry.update();
         }
     }
