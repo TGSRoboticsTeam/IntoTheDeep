@@ -27,7 +27,7 @@ public class YaelDriveJr extends LinearOpMode {
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
         Servo armServo = hardwareMap.get(Servo.class, "arm_servo");
-        Servo clawServo = hardwareMap.get(Servo.class, "claw_servo");
+        Servo wristServo = hardwareMap.get(Servo.class, "claw_servo");
         Servo grabber = hardwareMap.get(Servo.class, "claw");
 
         // Motor Setup
@@ -132,6 +132,11 @@ public class YaelDriveJr extends LinearOpMode {
             //////////////// OTHER COMPONENTS //////////////////
             linearSlide.setPower(moveSlide);
 
+            telemetry.addData("Linear Slide", "%.2f", linearSlide.getCurrentPosition());
+            telemetry.addData("Arm Servo", "%.2f", armServo.getPosition());
+            telemetry.addData("Wrist Servo", "%.2f", wristServo.getPosition());
+            telemetry.addData("Grabber Servo", "%.2f", grabber.getPosition());
+            /*
             double grabbingPos = 1;
             if (toggleGrabber && !justGrabbed) {
                 justGrabbed = true;
@@ -158,7 +163,7 @@ public class YaelDriveJr extends LinearOpMode {
                 }
             }else{
                 justMovedArm = false;
-            }
+            }*/
 
             /*telemetry.addData("Left Slide Encoder: ", linearSlides.getLeftSlideEncoder());
             telemetry.addData("Right Slide Encoder: ", linearSlides.getRightSlideEncoder());*/
