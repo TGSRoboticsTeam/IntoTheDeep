@@ -6,7 +6,9 @@ import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.Disabled;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
@@ -19,7 +21,14 @@ import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 public class YaelDriveJr extends LinearOpMode {
     @Override
     public void runOpMode() {
-        //GamepadEx gamepadEx = new GamepadEx(gamepad2);
+        //GamepadEx gamepadEx = new GamepadEx(gamepad2); // probably not needed...
+        DcMotor linearSlide = hardwareMap.get(DcMotor.class, "linear_slide");
+        linearSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        Servo armServo = hardwareMap.get(Servo.class, "arm_servo");
+        Servo clawServo = hardwareMap.get(Servo.class, "claw_servo");
+        Servo grabber = hardwareMap.get(Servo.class, "claw");
 
         // Motor Setup
         DcMotor leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
@@ -44,6 +53,8 @@ public class YaelDriveJr extends LinearOpMode {
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
         double changeInSpeed = 0.2;
+        boolean justGrabbed = false;
+        boolean justMovedArm = false;
 
         // Retrieve the IMU from the hardware map
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -60,8 +71,13 @@ public class YaelDriveJr extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Define joystick controls
-            // Drive
+            double moveSlide = gamepad2.left_stick_y;
+            boolean toggleArm = gamepad2.right_bumper;
+            boolean toggleGrabber = gamepad2.left_bumper;
+            boolean closeGrabber = gamepad2.a;
+            boolean openGrabber = gamepad2.b;
 
+            // Drive
             double y   = -gamepad1.left_stick_y;
             double x   =  gamepad1.left_stick_x;
             double rx  =  gamepad1.right_stick_x;
@@ -112,6 +128,37 @@ public class YaelDriveJr extends LinearOpMode {
             leftBackDrive.setPower(backLeftPower);
             rightFrontDrive.setPower(frontRightPower);
             rightBackDrive.setPower(backRightPower);
+
+            //////////////// OTHER COMPONENTS //////////////////
+            linearSlide.setPower(moveSlide);
+
+            double grabbingPos = 1;
+            if (toggleGrabber && !justGrabbed) {
+                justGrabbed = true;
+                if (grabber.getPosition() == grabbingPos) {
+                    grabber.setPosition(0);
+                }else{
+                    grabber.setPosition(grabbingPos);
+                }
+            }else if (openGrabber) {
+                grabber.setPosition(grabbingPos);
+            }else if (closeGrabber) {
+                grabber.setPosition(0);
+            }else{
+                justGrabbed = false;
+            }
+
+            double armPos = 1;
+            if (toggleArm && !justMovedArm) {
+                justMovedArm = true;
+                if (armServo.getPosition() == armPos) {
+                    armServo.setPosition(0);
+                }else{
+                    armServo.setPosition(armPos);
+                }
+            }else{
+                justMovedArm = false;
+            }
 
             /*telemetry.addData("Left Slide Encoder: ", linearSlides.getLeftSlideEncoder());
             telemetry.addData("Right Slide Encoder: ", linearSlides.getRightSlideEncoder());*/
