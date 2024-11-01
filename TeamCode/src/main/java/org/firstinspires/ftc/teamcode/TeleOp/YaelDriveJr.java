@@ -10,6 +10,7 @@ import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.IMU;
+import com.qualcomm.robotcore.hardware.ServoImpl;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
@@ -26,9 +27,9 @@ public class YaelDriveJr extends LinearOpMode {
         linearSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        Servo armServo = hardwareMap.get(Servo.class, "arm_servo");
-        Servo wristServo = hardwareMap.get(Servo.class, "claw_servo");
-        Servo grabber = hardwareMap.get(Servo.class, "claw");
+        ServoImpl armServo = hardwareMap.get(ServoImpl.class, "arm_servo");
+        ServoImpl wristServo = hardwareMap.get(ServoImpl.class, "claw_servo");
+        ServoImpl grabber = hardwareMap.get(ServoImpl.class, "claw");
 
         // Motor Setup
         DcMotor leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
@@ -47,6 +48,10 @@ public class YaelDriveJr extends LinearOpMode {
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+        // Makes the motors output their rotation
+        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Set up FtcDashboard telemetry
         FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -135,7 +140,7 @@ public class YaelDriveJr extends LinearOpMode {
             //telemetry.addData("Linear Slide", "%.2f", linearSlide.getCurrentPosition());
             telemetry.addData("Arm Servo", "%.2f", armServo.getPosition());
             telemetry.addData("Wrist Servo", "%.2f", wristServo.getPosition());
-            telemetry.addData("Grabber Servo", "%.2f", grabber.getPosition());*/
+            telemetry.addData("Grabber Servo", "%.2f", grabber.getPosition());
             
             double grabbingPos = 1;
             if (toggleGrabber && !justGrabbed) {
@@ -163,7 +168,7 @@ public class YaelDriveJr extends LinearOpMode {
                 }
             }else{
                 justMovedArm = false;
-            }*/
+            }
 
             /*telemetry.addData("Left Slide Encoder: ", linearSlides.getLeftSlideEncoder());
             telemetry.addData("Right Slide Encoder: ", linearSlides.getRightSlideEncoder());*/
