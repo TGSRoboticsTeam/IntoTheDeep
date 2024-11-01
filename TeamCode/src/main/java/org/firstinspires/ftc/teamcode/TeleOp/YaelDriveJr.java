@@ -132,11 +132,11 @@ public class YaelDriveJr extends LinearOpMode {
             //////////////// OTHER COMPONENTS //////////////////
             linearSlide.setPower(moveSlide);
 
-            /*telemetry.addData("Linear Slide", "%.2f", linearSlide.getCurrentPosition());
+            //telemetry.addData("Linear Slide", "%.2f", linearSlide.getCurrentPosition());
             telemetry.addData("Arm Servo", "%.2f", armServo.getPosition());
             telemetry.addData("Wrist Servo", "%.2f", wristServo.getPosition());
             telemetry.addData("Grabber Servo", "%.2f", grabber.getPosition());*/
-            /*
+            
             double grabbingPos = 1;
             if (toggleGrabber && !justGrabbed) {
                 justGrabbed = true;
