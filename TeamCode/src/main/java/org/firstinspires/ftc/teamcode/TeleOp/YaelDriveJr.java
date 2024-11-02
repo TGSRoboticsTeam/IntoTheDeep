@@ -27,9 +27,9 @@ public class YaelDriveJr extends LinearOpMode {
         linearSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
 
-        ServoImpl armServo = hardwareMap.get(ServoImpl.class, "arm_servo");
-        ServoImpl wristServo = hardwareMap.get(ServoImpl.class, "claw_servo");
-        ServoImpl grabber = hardwareMap.get(ServoImpl.class, "claw");
+        Servo armServo = hardwareMap.get(Servo.class, "arm_servo");
+        Servo wristServo = hardwareMap.get(Servo.class, "grabber_servo");
+        Servo grabber = hardwareMap.get(Servo.class, "grabber");
 
         // Motor Setup
         DcMotor leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
@@ -82,14 +82,19 @@ public class YaelDriveJr extends LinearOpMode {
             boolean closeGrabber = gamepad2.a;
             boolean openGrabber = gamepad2.b;
 
+            boolean armPos1 = gamepad2.dpad_right;
+            boolean armPos2 = gamepad2.dpad_up;
+            boolean armPos3 = gamepad2.dpad_left;
+            boolean armPos4 = gamepad2.dpad_down;
+
             // Drive
-            double y   = -gamepad1.left_stick_y;
-            double x   =  gamepad1.left_stick_x;
-            double rx  =  gamepad1.right_stick_x;
+            double y = -gamepad1.left_stick_y;
+            double x = gamepad1.left_stick_x;
+            double rx = gamepad1.right_stick_x;
 
             boolean slowDown = gamepad1.left_bumper;
 
-            if(gamepad1.dpad_up){
+            if (gamepad1.dpad_up) {
                 imu.resetYaw();
             }
 
@@ -108,11 +113,11 @@ public class YaelDriveJr extends LinearOpMode {
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
 
-            if (slowDown){
-                frontLeftPower  *= changeInSpeed;
+            if (slowDown) {
+                frontLeftPower *= changeInSpeed;
                 frontRightPower *= changeInSpeed;
-                backLeftPower   *= changeInSpeed;
-                backRightPower  *= changeInSpeed;
+                backLeftPower *= changeInSpeed;
+                backRightPower *= changeInSpeed;
             }
 
             double roundDown = 0.2;
@@ -137,37 +142,56 @@ public class YaelDriveJr extends LinearOpMode {
             //////////////// OTHER COMPONENTS //////////////////
             linearSlide.setPower(moveSlide);
 
-            //telemetry.addData("Linear Slide", "%.2f", linearSlide.getCurrentPosition());
-            telemetry.addData("Arm Servo", "%.2f", armServo.getPosition());
-            telemetry.addData("Wrist Servo", "%.2f", wristServo.getPosition());
-            telemetry.addData("Grabber Servo", "%.2f", grabber.getPosition());
-            
-            double grabbingPos = 1;
-            if (toggleGrabber && !justGrabbed) {
-                justGrabbed = true;
-                if (grabber.getPosition() == grabbingPos) {
-                    grabber.setPosition(0);
-                }else{
-                    grabber.setPosition(grabbingPos);
-                }
-            }else if (openGrabber) {
-                grabber.setPosition(grabbingPos);
-            }else if (closeGrabber) {
-                grabber.setPosition(0);
-            }else{
-                justGrabbed = false;
-            }
-
-            double armPos = 1;
-            if (toggleArm && !justMovedArm) {
-                justMovedArm = true;
-                if (armServo.getPosition() == armPos) {
+            telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
+            telemetry.addData("Arm Servo", armServo.getPosition());
+            telemetry.addData("Wrist Servo", wristServo.getPosition());
+            telemetry.addData("Grabber Servo", grabber.getPosition());
+            //*
+            if (armPos1 || armPos2 || armPos3 || armPos4) {
+                if (armPos1) {
+                    armServo.setPosition(-1);
+                    wristServo.setPosition(1);
+                }else if (armPos2) {
+                    armServo.setPosition(-0.5);
+                    wristServo.setPosition(0.5);
+                }else if (armPos3) {
                     armServo.setPosition(0);
-                }else{
-                    armServo.setPosition(armPos);
+                    wristServo.setPosition(0);
+                }else if (armPos4) {
+                    armServo.setPosition(0.5);
+                    wristServo.setPosition(-0.5);
                 }
             }else{
-                justMovedArm = false;
+                // Grabbing
+                double grabbingPos = 1;
+                if (toggleGrabber && !justGrabbed) {
+                    justGrabbed = true;
+                    if (grabber.getPosition() == grabbingPos) {
+                        grabber.setPosition(0);
+                    } else {
+                        grabber.setPosition(grabbingPos);
+                    }
+                } else if (openGrabber) {
+                    grabber.setPosition(grabbingPos);
+                } else if (closeGrabber) {
+                    grabber.setPosition(0);
+                } else {
+                    justGrabbed = false;
+                }
+
+                // Arm rotate
+                double armPos = 1;
+                if (toggleArm && !justMovedArm) {
+                    justMovedArm = true;
+                    if (armServo.getPosition() == armPos) {
+                        armServo.setPosition(0);
+                    } else {
+                        armServo.setPosition(armPos);
+                    }
+                } else {
+                    justMovedArm = false;
+                }
+                //*/
             }
 
             /*telemetry.addData("Left Slide Encoder: ", linearSlides.getLeftSlideEncoder());

@@ -44,8 +44,8 @@ public class YaelAuto extends LinearOpMode {
         runtime.reset();
 
         // Run auto
-        driveForward(1000, 5);
-        rotateDegrees(90, 5);
+        driveForward(1000, 0.5);
+        rotateDegrees(90, 0.5);
         // telemetry.addData("Testing...");
         telemetry.update();
 
@@ -110,13 +110,17 @@ public class YaelAuto extends LinearOpMode {
         double originalY = odo.getPosY();
         while (distanceTo(originalX, originalY) < millimeters) {
             drive(power, 0, 0);
+            telemetry.addData("Distance Traveled", distanceTo(originalX, originalY));
+            telemetry.update();
         }
     }
 
     public void rotateDegrees(double degrees, double power) {
         double originalRot = (odo.getHeading() * 180) / Math.PI;
-        while (Math.abs(originalRot) < degrees) {
+        while (Math.abs(originalRot - odo.getHeading()) < degrees) {
             drive(0, 0, power);
+            telemetry.addData("Rotation", originalRot - odo.getHeading());
+            telemetry.update();
         }
     }
         // Show the elapsed game time and wheel power.
