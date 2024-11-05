@@ -38,9 +38,9 @@ public class YaelDriveJr extends LinearOpMode {
         DcMotor rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
         // Sets the motor direction
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Makes the motors stop moving when they receive an input of 0
@@ -76,11 +76,14 @@ public class YaelDriveJr extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Define joystick controls
-            double moveSlide = gamepad2.left_stick_y;
+            //double moveSlide =gamepad2.left_stick_y;
+            float moveSlideUp = gamepad1.left_trigger;
+            float moveSlideDown = gamepad1.right_trigger;
+
             boolean toggleArm = gamepad2.right_bumper;
             boolean toggleGrabber = gamepad2.left_bumper;
-            boolean closeGrabber = gamepad2.a;
-            boolean openGrabber = gamepad2.b;
+            boolean closeGrabber = gamepad1.a;
+            boolean openGrabber = gamepad1.b;
 
             boolean armPos1 = gamepad2.dpad_right;
             boolean armPos2 = gamepad2.dpad_up;
@@ -112,6 +115,7 @@ public class YaelDriveJr extends LinearOpMode {
             double backLeftPower = (rotY - rotX + rx) / denominator;
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
+            telemetry.addData("fl, bl,fr,br: ", "%.2f %.2f %.2f %.2f",frontLeftPower,backLeftPower,frontRightPower,backRightPower);
 
             if (slowDown) {
                 frontLeftPower *= changeInSpeed;
@@ -120,17 +124,17 @@ public class YaelDriveJr extends LinearOpMode {
                 backRightPower *= changeInSpeed;
             }
 
-            double roundDown = 0.2;
-            if (frontLeftPower <= roundDown) {
+            double roundDown = 0.1;
+            if (Math.abs(frontLeftPower) <= roundDown) {
                 frontLeftPower = 0;
             }
-            if (frontRightPower <= roundDown) {
+            if (Math.abs(frontRightPower) <= roundDown) {
                 frontRightPower = 0;
             }
-            if (backLeftPower <= roundDown) {
+            if (Math.abs(backLeftPower) <= roundDown) {
                 backLeftPower = 0;
             }
-            if (backRightPower <= roundDown) {
+            if (Math.abs(backRightPower) <= roundDown) {
                 backRightPower = 0;
             }
 
@@ -140,9 +144,18 @@ public class YaelDriveJr extends LinearOpMode {
             rightBackDrive.setPower(backRightPower);
 
             //////////////// OTHER COMPONENTS //////////////////
-            linearSlide.setPower(moveSlide);
+            //linearSlide.setPower(moveSlide);
+            if(moveSlideUp>.1){
+                linearSlide.setPower(-0.5*moveSlideUp);
+            }
+            else if(moveSlideDown>.1){
+                linearSlide.setPower(0.5*moveSlideDown);
+            }
+            else{
+                linearSlide.setPower(0);
+            }
 
-            telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
+            //telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
             telemetry.addData("Arm Servo", armServo.getPosition());
             telemetry.addData("Wrist Servo", wristServo.getPosition());
             telemetry.addData("Grabber Servo", grabber.getPosition());

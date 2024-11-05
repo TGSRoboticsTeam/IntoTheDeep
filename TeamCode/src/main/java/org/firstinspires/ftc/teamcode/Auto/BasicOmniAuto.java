@@ -259,11 +259,13 @@ public class BasicOmniAuto extends LinearOpMode {
         strafeByTime(-.4,.7);
         driveByTime(.25,1);
         strafeByTime(-.25,.7);
-        diagByTime(-.5,-.15,2);
-        diagByTime(.5,.15,1);
+        driveByTime(-.5,1.5); //c
+        driveByTime(-.25,0.5);
+        driveByTime(.5,2);
         strafeByTime(-.25,.5);
-        diagByTime(-.5,-.15,2);
-        diagByTime(.5,.15,1);
+        driveByTime(-.5,2);//b
+        driveByTime(-.25,0.5);
+        driveByTime(.5,1);
         strafeByTime(.25,2.5);
     }
 

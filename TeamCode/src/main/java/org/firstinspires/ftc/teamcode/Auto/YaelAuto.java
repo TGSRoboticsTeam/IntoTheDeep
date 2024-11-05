@@ -30,9 +30,9 @@ public class YaelAuto extends LinearOpMode {
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Wait for the game to start (driver presses START)
@@ -44,7 +44,7 @@ public class YaelAuto extends LinearOpMode {
         runtime.reset();
 
         // Run auto
-        driveForward(1000, 0.5);
+        driveForward(1000, 0.1);
         rotateDegrees(90, 0.5);
         // telemetry.addData("Testing...");
         telemetry.update();
