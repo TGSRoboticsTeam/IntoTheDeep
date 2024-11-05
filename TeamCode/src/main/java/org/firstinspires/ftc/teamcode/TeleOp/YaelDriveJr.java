@@ -38,9 +38,9 @@ public class YaelDriveJr extends LinearOpMode {
         DcMotor rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
 
         // Sets the motor direction
-        leftFrontDrive.setDirection(DcMotor.Direction.FORWARD);
-        leftBackDrive.setDirection(DcMotor.Direction.FORWARD);
-        rightFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
+        leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
+        rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
         // Makes the motors stop moving when they receive an input of 0
@@ -120,17 +120,17 @@ public class YaelDriveJr extends LinearOpMode {
                 backRightPower *= changeInSpeed;
             }
 
-            double roundDown = 0.2;
-            if (frontLeftPower <= roundDown) {
+            double roundDown = 0.1;
+            if (Math.abs(frontLeftPower) <= roundDown) {
                 frontLeftPower = 0;
             }
-            if (frontRightPower <= roundDown) {
+            if (Math.abs(frontRightPower) <= roundDown) {
                 frontRightPower = 0;
             }
-            if (backLeftPower <= roundDown) {
+            if (Math.abs(backLeftPower) <= roundDown) {
                 backLeftPower = 0;
             }
-            if (backRightPower <= roundDown) {
+            if (Math.abs(backRightPower) <= roundDown) {
                 backRightPower = 0;
             }
 
