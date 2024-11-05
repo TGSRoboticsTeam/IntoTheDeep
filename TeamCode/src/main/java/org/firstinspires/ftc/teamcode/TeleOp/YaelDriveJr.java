@@ -80,8 +80,11 @@ public class YaelDriveJr extends LinearOpMode {
             float moveSlideUp = gamepad1.left_trigger;
             float moveSlideDown = gamepad1.right_trigger;
 
-            boolean toggleArm = gamepad2.right_bumper;
-            boolean toggleGrabber = gamepad2.left_bumper;
+            //boolean toggleArm = gamepad2.right_bumper;
+            //boolean toggleGrabber = gamepad2.left_bumper;
+
+            boolean toggleArm = gamepad1.x;
+            boolean toggleGrabber = gamepad1.y;
             boolean closeGrabber = gamepad1.a;
             boolean openGrabber = gamepad1.b;
 
@@ -146,10 +149,10 @@ public class YaelDriveJr extends LinearOpMode {
             //////////////// OTHER COMPONENTS //////////////////
             //linearSlide.setPower(moveSlide);
             if(moveSlideUp>.1){
-                linearSlide.setPower(-0.5*moveSlideUp);
+                linearSlide.setPower(-0.75*moveSlideUp);
             }
             else if(moveSlideDown>.1){
-                linearSlide.setPower(0.5*moveSlideDown);
+                linearSlide.setPower(0.75*moveSlideDown);
             }
             else{
                 linearSlide.setPower(0);
