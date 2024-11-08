@@ -26,6 +26,9 @@ public class YaelDriveJr extends LinearOpMode {
         DcMotor linearSlide = hardwareMap.get(DcMotor.class, "linear_slide");
         linearSlide.setDirection(DcMotorSimple.Direction.FORWARD);
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Makes the motors output their rotation
+        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         Servo armServo = hardwareMap.get(Servo.class, "arm_servo");
         Servo wristServo = hardwareMap.get(Servo.class, "grabber_servo");
@@ -48,10 +51,6 @@ public class YaelDriveJr extends LinearOpMode {
         leftBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightBackDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         rightFrontDrive.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-
-        // Makes the motors output their rotation
-        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // Set up FtcDashboard telemetry
         FtcDashboard dashboard = FtcDashboard.getInstance();
@@ -76,8 +75,8 @@ public class YaelDriveJr extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Define joystick controls
-            //double moveSlide =gamepad2.left_stick_y;
-            float moveSlide = gamepad1.left_trigger - gamepad1.right_trigger;
+            double moveSlide = gamepad2.left_stick_y;
+            //float moveSlide = gamepad2.left_trigger - gamepad2.right_trigger;
 
             //boolean toggleArm = gamepad2.right_bumper;
             //boolean toggleGrabber = gamepad2.left_bumper;
@@ -146,10 +145,15 @@ public class YaelDriveJr extends LinearOpMode {
             rightBackDrive.setPower(backRightPower);
 
             //////////////// OTHER COMPONENTS //////////////////
-            //linearSlide.setPower(moveSlide);
+            if (linearSlide.getCurrentPosition() >= 2235 && moveSlide > 0) {
+                moveSlide = 0;
+            } else if (linearSlide.getCurrentPosition() <= 0 && moveSlide < 0) {
+                moveSlide = 0;
+            }
             double linearSlowDown = 0.75;
             linearSlide.setPower(moveSlide * linearSlowDown);
 
+            telemetry.addData("moveSlide var", moveSlide);
             telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
             telemetry.addData("Arm Servo", armServo.getPosition());
             telemetry.addData("Wrist Servo", wristServo.getPosition());
@@ -202,8 +206,6 @@ public class YaelDriveJr extends LinearOpMode {
                 //*/
             }
 
-            /*telemetry.addData("Left Slide Encoder: ", linearSlides.getLeftSlideEncoder());
-            telemetry.addData("Right Slide Encoder: ", linearSlides.getRightSlideEncoder());*/
             YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
             telemetry.addData("Pitch (X)", "%.2f", orientation.getPitch(AngleUnit.DEGREES));
             telemetry.addData("Roll (Y)", "%.2f", orientation.getRoll(AngleUnit.DEGREES));
