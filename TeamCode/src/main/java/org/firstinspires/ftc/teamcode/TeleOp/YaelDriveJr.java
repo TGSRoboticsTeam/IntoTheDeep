@@ -77,8 +77,7 @@ public class YaelDriveJr extends LinearOpMode {
         while (opModeIsActive()) {
             // Define joystick controls
             //double moveSlide =gamepad2.left_stick_y;
-            float moveSlideUp = gamepad1.left_trigger;
-            float moveSlideDown = gamepad1.right_trigger;
+            float moveSlide = gamepad1.left_trigger - gamepad1.right_trigger;
 
             //boolean toggleArm = gamepad2.right_bumper;
             //boolean toggleGrabber = gamepad2.left_bumper;
@@ -118,7 +117,7 @@ public class YaelDriveJr extends LinearOpMode {
             double backLeftPower = (rotY - rotX + rx) / denominator;
             double frontRightPower = (rotY - rotX - rx) / denominator;
             double backRightPower = (rotY + rotX - rx) / denominator;
-            telemetry.addData("fl, bl,fr,br: ", "%.2f %.2f %.2f %.2f",frontLeftPower,backLeftPower,frontRightPower,backRightPower);
+            //telemetry.addData("fl, bl,fr,br: ", "%.2f %.2f %.2f %.2f",frontLeftPower,backLeftPower,frontRightPower,backRightPower);
 
             if (slowDown) {
                 frontLeftPower *= changeInSpeed;
@@ -148,17 +147,10 @@ public class YaelDriveJr extends LinearOpMode {
 
             //////////////// OTHER COMPONENTS //////////////////
             //linearSlide.setPower(moveSlide);
-            if(moveSlideUp>.1){
-                linearSlide.setPower(-0.75*moveSlideUp);
-            }
-            else if(moveSlideDown>.1){
-                linearSlide.setPower(0.75*moveSlideDown);
-            }
-            else{
-                linearSlide.setPower(0);
-            }
+            double linearSlowDown = 0.75;
+            linearSlide.setPower(moveSlide * linearSlowDown);
 
-            //telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
+            telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
             telemetry.addData("Arm Servo", armServo.getPosition());
             telemetry.addData("Wrist Servo", wristServo.getPosition());
             telemetry.addData("Grabber Servo", grabber.getPosition());
