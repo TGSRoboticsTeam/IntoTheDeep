@@ -24,7 +24,7 @@ public class YaelDriveJr extends LinearOpMode {
     public void runOpMode() {
         //GamepadEx gamepadEx = new GamepadEx(gamepad2); // probably not needed...
         DcMotor linearSlide = hardwareMap.get(DcMotor.class, "linear_slide");
-        linearSlide.setDirection(DcMotorSimple.Direction.FORWARD);
+        linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Makes the motors output their rotation
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
@@ -75,7 +75,7 @@ public class YaelDriveJr extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Define joystick controls
-            double moveSlide = gamepad2.left_stick_y;
+            double moveSlide = -gamepad2.left_stick_y;
             //float moveSlide = gamepad2.left_trigger - gamepad2.right_trigger;
 
             //boolean toggleArm = gamepad2.right_bumper;
@@ -145,15 +145,18 @@ public class YaelDriveJr extends LinearOpMode {
             rightBackDrive.setPower(backRightPower);
 
             //////////////// OTHER COMPONENTS //////////////////
-            if (linearSlide.getCurrentPosition() >= 2235 && moveSlide > 0) {
+            telemetry.addData("moveSlide var before", moveSlide);
+            if (linearSlide.getCurrentPosition() >= 2210 && moveSlide > 0) {
                 moveSlide = 0;
-            } else if (linearSlide.getCurrentPosition() <= 0 && moveSlide < 0) {
+            } else if (linearSlide.getCurrentPosition() <= 2 && moveSlide < 0) {
                 moveSlide = 0;
+            } else if (linearSlide.getCurrentPosition() <= 1105 && moveSlide == 0) {
+                moveSlide = 0.1;
             }
             double linearSlowDown = 0.75;
             linearSlide.setPower(moveSlide * linearSlowDown);
 
-            telemetry.addData("moveSlide var", moveSlide);
+            telemetry.addData("moveSlide var after", moveSlide);
             telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
             telemetry.addData("Arm Servo", armServo.getPosition());
             telemetry.addData("Wrist Servo", wristServo.getPosition());
