@@ -33,6 +33,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 /*
@@ -73,6 +74,9 @@ public class BasicOmniAuto extends LinearOpMode {
     private DcMotor leftBackDrive = null;
     private DcMotor rightFrontDrive = null;
     private DcMotor rightBackDrive = null;
+    private Servo armServo = null;
+    private Servo wristServo=null;
+    private Servo grabber = null;
 
     @Override
     public void runOpMode() {
@@ -83,6 +87,9 @@ public class BasicOmniAuto extends LinearOpMode {
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+        armServo = hardwareMap.get(Servo.class, "arm_servo");
+        wristServo = hardwareMap.get(Servo.class, "wrist_servo");
+        grabber = hardwareMap.get(Servo.class, "grabber_servo");
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -116,14 +123,7 @@ public class BasicOmniAuto extends LinearOpMode {
        //strafeByTime(-.5,4);
         //dropAndTouch3();
         krabbyPatty();
-        while(runtime.seconds() < 30) {
-        }
-        runtime.reset();
-        fishy();
-        while(runtime.seconds() < 30) {
-        }
-        runtime.reset();
-        fishHook();
+
 
     }
 
@@ -166,9 +166,17 @@ public class BasicOmniAuto extends LinearOpMode {
        // telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackDrive, rightBackDrive);
         //telemetry.update();
 
-
     }
-    public void diagByTime(double power,double power2, double time ){
+
+    public void bestRotateByTime(double power, double time){
+        runtime.reset();
+        while(runtime.seconds() < time) {
+            leftFrontDrive.setPower(power);
+        }
+    }
+
+
+  /*  public void diagByTime(double power,double power2, double time ){
         // Send calculated power to wheels
         runtime.reset();
         while(runtime.seconds() < time) {
@@ -176,6 +184,7 @@ public class BasicOmniAuto extends LinearOpMode {
             rightFrontDrive.setPower(-power2);
             leftBackDrive.setPower(-power2);
             rightBackDrive.setPower(power);
+
         }
         // Show the elapsed game time and wheel power.
         //telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -252,21 +261,35 @@ public class BasicOmniAuto extends LinearOpMode {
         diagByTime(.5,.35,1);
         strafeByTime(.5,2.5);
     }
+
+   */
+
+    //arm = hand, grabber = wrist, wrist=arm
     public void krabbyPatty(){
         //Mr. Krabs with another sample
-        driveByTime(.25,1.5);
+        wristServo.setPosition(0.5);
+        grabber.setPosition(.5);
+        driveByTime(.25,1.6);
         driveByTime(0,1.5);
-        strafeByTime(-.4,.7);
-        driveByTime(.25,1);
-        strafeByTime(-.25,.7);
-        driveByTime(-.5,1.5); //c
+        driveByTime(0,1.5);
+        strafeByTime(-.5,1.7);
+        driveByTime(.5,1.4);
+        strafeByTime(-.25,1.3);
+        bestRotateByTime(.25,.5);//turn a little to the right - one wheel
+        driveByTime(-.5,1.6); //c
         driveByTime(-.25,0.5);
-        driveByTime(.5,2);
-        strafeByTime(-.25,.5);
+        driveByTime(.5,1.7);
+        strafeByTime(-.5,.45);
         driveByTime(-.5,2);//b
         driveByTime(-.25,0.5);
-        driveByTime(.5,1);
-        strafeByTime(.25,2.5);
+        driveByTime(.5,1.7);
+        strafeByTime(-.5,.4);
+        strafeByTime(-.25, .2);
+        driveByTime(-.5,1.8);//A
+        driveByTime(-.25,1);
+        driveByTime(.5,1.4);
+        strafeByTime(.5,1.5);
+        strafeByTime(.25,.5);
     }
 
 
