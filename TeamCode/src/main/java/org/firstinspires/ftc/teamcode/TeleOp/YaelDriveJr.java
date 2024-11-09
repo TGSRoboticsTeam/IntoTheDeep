@@ -31,8 +31,8 @@ public class YaelDriveJr extends LinearOpMode {
         linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         Servo armServo = hardwareMap.get(Servo.class, "arm_servo");
-        Servo wristServo = hardwareMap.get(Servo.class, "grabber_servo");
-        Servo grabber = hardwareMap.get(Servo.class, "grabber");
+        Servo wristServo = hardwareMap.get(Servo.class, "wrist_servo");
+        Servo grabber = hardwareMap.get(Servo.class, "grabber_servo");
 
         // Motor Setup
         DcMotor leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
@@ -76,13 +76,13 @@ public class YaelDriveJr extends LinearOpMode {
         while (opModeIsActive()) {
             // Define joystick controls
             double moveSlide = -gamepad2.left_stick_y;
-            //float moveSlide = gamepad2.left_trigger - gamepad2.right_trigger;
+            //double moveSlide = gamepad2.left_trigger - gamepad2.right_trigger;
 
-            //boolean toggleArm = gamepad2.right_bumper;
-            //boolean toggleGrabber = gamepad2.left_bumper;
+            boolean toggleArm = gamepad2.right_bumper;
+            boolean toggleGrabber = gamepad2.left_bumper;
 
-            boolean toggleArm = gamepad1.x;
-            boolean toggleGrabber = gamepad1.y;
+            /*boolean toggleArm = gamepad1.x;
+            boolean toggleGrabber = gamepad1.y;*/
             boolean closeGrabber = gamepad1.a;
             boolean openGrabber = gamepad1.b;
 
@@ -176,38 +176,38 @@ public class YaelDriveJr extends LinearOpMode {
                     armServo.setPosition(0.5);
                     wristServo.setPosition(-0.5);
                 }
-            }else{
-                // Grabbing
-                double grabbingPos = 1;
-                if (toggleGrabber && !justGrabbed) {
-                    justGrabbed = true;
-                    if (grabber.getPosition() == grabbingPos) {
-                        grabber.setPosition(0);
-                    } else {
-                        grabber.setPosition(grabbingPos);
-                    }
-                } else if (openGrabber) {
-                    grabber.setPosition(grabbingPos);
-                } else if (closeGrabber) {
-                    grabber.setPosition(0);
-                } else {
-                    justGrabbed = false;
-                }
-
-                // Arm rotate
-                double armPos = 1;
-                if (toggleArm && !justMovedArm) {
-                    justMovedArm = true;
-                    if (armServo.getPosition() == armPos) {
-                        armServo.setPosition(0);
-                    } else {
-                        armServo.setPosition(armPos);
-                    }
-                } else {
-                    justMovedArm = false;
-                }
-                //*/
             }
+
+            // Grabbing
+            double grabbingPos = 1;
+            if (toggleGrabber && !justGrabbed) {
+                justGrabbed = true;
+                if (grabber.getPosition() == grabbingPos) {
+                    grabber.setPosition(0.5);
+                } else {
+                    grabber.setPosition(grabbingPos);
+                }
+            } else if (openGrabber) {
+                grabber.setPosition(grabbingPos);
+            } else if (closeGrabber) {
+                grabber.setPosition(0.5);
+            } else {
+                justGrabbed = false;
+            }
+
+            // Arm rotate
+            double armPos = 1;
+            if (toggleArm && !justMovedArm) {
+                justMovedArm = true;
+                if (armServo.getPosition() == armPos) {
+                    armServo.setPosition(0);
+                } else {
+                    armServo.setPosition(armPos);
+                }
+            } else {
+                justMovedArm = false;
+            }
+            //*/
 
             YawPitchRollAngles orientation = imu.getRobotYawPitchRollAngles();
             telemetry.addData("Pitch (X)", "%.2f", orientation.getPitch(AngleUnit.DEGREES));
