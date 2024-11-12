@@ -78,8 +78,8 @@ public class SingleTourneyDrive extends LinearOpMode {
             //double moveSlide = -gamepad2.left_stick_y;
             double moveSlide = gamepad1.left_trigger - gamepad1.right_trigger;
 
-            boolean toggleArm = gamepad2.right_bumper;
-            boolean toggleGrabber = gamepad2.left_bumper;
+            boolean toggleArm = gamepad1.right_bumper;
+            boolean toggleGrabber = gamepad1.left_bumper;
 
             /*boolean toggleArm = gamepad1.x;
             boolean toggleGrabber = gamepad1.y;*/
@@ -96,7 +96,7 @@ public class SingleTourneyDrive extends LinearOpMode {
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
 
-            boolean slowDown = gamepad1.left_bumper;
+            boolean slowDown = gamepad1.x;
 
             if (gamepad1.y) {
                 imu.resetYaw();
