@@ -75,7 +75,7 @@ public class YaelDriveJr extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Define joystick controls
-            double moveSlide = -gamepad2.left_stick_y;
+            double moveSlide = -gamepad2.right_stick_y;
             //double moveSlide = gamepad2.left_trigger - gamepad2.right_trigger;
 
             boolean toggleArm = gamepad2.left_bumper;
@@ -161,8 +161,8 @@ public class YaelDriveJr extends LinearOpMode {
             telemetry.addData("Grabber Servo", grabber.getPosition());
             //*
             if (armPos1) { // right (good)
-                armServo.setPosition(0); // scoop
-                wristServo.setPosition(0.5); // scoop
+                armServo.setPosition(0.1); // down
+                wristServo.setPosition(0.9); // down
             }else if (armPos2) { // up (good)
                 armServo.setPosition(0.5); // up
                 wristServo.setPosition(1.0); // up
@@ -170,8 +170,8 @@ public class YaelDriveJr extends LinearOpMode {
                 armServo.setPosition(0.3); // flat
                 wristServo.setPosition(0.8); // flat
             }else if (armPos4) { // down (good)
-                armServo.setPosition(0.1); // down
-                wristServo.setPosition(0.9); // down
+                armServo.setPosition(0); // scoop
+                wristServo.setPosition(0.5); // scoop
             }
 
             // Grabbing
@@ -195,9 +195,9 @@ public class YaelDriveJr extends LinearOpMode {
             double armPos = 0.6;
             if (toggleArm && !justMovedArm) {
                 justMovedArm = true;
-                if (armServo.getPosition() == armPos) {
-                    armServo.setPosition(0.2);
-                    wristServo.setPosition(0.5); // parallel(ish) to floor
+                if (Math.round(armServo.getPosition() * 10) / 10 == armPos) { // weird math just rounds to tenths place
+                    armServo.setPosition(0); // scoop
+                    wristServo.setPosition(0.5); // scoop
                 } else {
                     armServo.setPosition(armPos);
                     wristServo.setPosition(0.8); // parallel to arm
