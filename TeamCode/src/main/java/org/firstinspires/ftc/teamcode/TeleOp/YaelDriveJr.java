@@ -78,13 +78,13 @@ public class YaelDriveJr extends LinearOpMode {
             double moveSlide = -gamepad2.left_stick_y;
             //double moveSlide = gamepad2.left_trigger - gamepad2.right_trigger;
 
-            boolean toggleArm = gamepad2.right_bumper;
-            boolean toggleGrabber = gamepad2.left_bumper;
+            boolean toggleArm = gamepad2.left_bumper;
+            boolean toggleGrabber = gamepad2.right_bumper;
 
             /*boolean toggleArm = gamepad1.x;
             boolean toggleGrabber = gamepad1.y;*/
-            boolean closeGrabber = gamepad1.a;
-            boolean openGrabber = gamepad1.b;
+            boolean closeGrabber = gamepad2.b;
+            boolean openGrabber = gamepad2.a;
 
             boolean armPos1 = gamepad2.dpad_right;
             boolean armPos2 = gamepad2.dpad_up;
@@ -145,37 +145,33 @@ public class YaelDriveJr extends LinearOpMode {
             rightBackDrive.setPower(backRightPower);
 
             //////////////// OTHER COMPONENTS //////////////////
-            telemetry.addData("moveSlide var before", moveSlide);
             if (linearSlide.getCurrentPosition() >= 2210 && moveSlide > 0) {
                 moveSlide = 0;
             } else if (linearSlide.getCurrentPosition() <= 2 && moveSlide < 0) {
                 moveSlide = 0;
-            } else if (linearSlide.getCurrentPosition() <= 1105 && moveSlide == 0) {
+            } else if (moveSlide == 0 && linearSlide.getCurrentPosition() >= 650) {
                 moveSlide = 0.1;
             }
             double linearSlowDown = 0.75;
             linearSlide.setPower(moveSlide * linearSlowDown);
 
-            telemetry.addData("moveSlide var after", moveSlide);
             telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
             telemetry.addData("Arm Servo", armServo.getPosition());
             telemetry.addData("Wrist Servo", wristServo.getPosition());
             telemetry.addData("Grabber Servo", grabber.getPosition());
             //*
-            if (armPos1 || armPos2 || armPos3 || armPos4) {
-                if (armPos1) {
-                    armServo.setPosition(-1);
-                    wristServo.setPosition(1);
-                }else if (armPos2) {
-                    armServo.setPosition(-0.5);
-                    wristServo.setPosition(0.5);
-                }else if (armPos3) {
-                    armServo.setPosition(0);
-                    wristServo.setPosition(0);
-                }else if (armPos4) {
-                    armServo.setPosition(0.5);
-                    wristServo.setPosition(-0.5);
-                }
+            if (armPos1) { // right (good)
+                armServo.setPosition(0); // scoop
+                wristServo.setPosition(0.5); // scoop
+            }else if (armPos2) { // up (good)
+                armServo.setPosition(0.5); // up
+                wristServo.setPosition(1.0); // up
+            }else if (armPos3) { // left (good)
+                armServo.setPosition(0.3); // flat
+                wristServo.setPosition(0.8); // flat
+            }else if (armPos4) { // down (good)
+                armServo.setPosition(0.1); // down
+                wristServo.setPosition(0.9); // down
             }
 
             // Grabbing
@@ -191,20 +187,22 @@ public class YaelDriveJr extends LinearOpMode {
                 grabber.setPosition(grabbingPos);
             } else if (closeGrabber) {
                 grabber.setPosition(0.5);
-            } else {
+            } else if (!toggleGrabber) {
                 justGrabbed = false;
             }
 
             // Arm rotate
-            double armPos = 1;
+            double armPos = 0.6;
             if (toggleArm && !justMovedArm) {
                 justMovedArm = true;
                 if (armServo.getPosition() == armPos) {
-                    armServo.setPosition(0);
+                    armServo.setPosition(0.2);
+                    wristServo.setPosition(0.5); // parallel(ish) to floor
                 } else {
                     armServo.setPosition(armPos);
+                    wristServo.setPosition(0.8); // parallel to arm
                 }
-            } else {
+            } else if (!toggleArm) {
                 justMovedArm = false;
             }
             //*/
