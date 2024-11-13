@@ -149,7 +149,7 @@ public class YaelDriveJr extends LinearOpMode {
                 moveSlide = 0;
             } else if (linearSlide.getCurrentPosition() <= 2 && moveSlide < 0) {
                 moveSlide = 0;
-            } else if (moveSlide == 0 && linearSlide.getCurrentPosition() >= 650) {
+            } else if (moveSlide == 0 && linearSlide.getCurrentPosition() >= 0) {
                 moveSlide = 0.1;
             }
             double linearSlowDown = 0.75;
