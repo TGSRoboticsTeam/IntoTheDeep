@@ -164,7 +164,7 @@ public class YaelDriveJr extends LinearOpMode {
             linearSlide.setPower(moveSlide * linearSlowDown);
 
             // Move hang
-            hang.setPower(moveHang)
+            hang.setPower(moveHang);
 
             telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
             //*
