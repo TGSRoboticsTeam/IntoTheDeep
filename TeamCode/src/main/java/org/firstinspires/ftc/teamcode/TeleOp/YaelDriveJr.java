@@ -23,6 +23,13 @@ public class YaelDriveJr extends LinearOpMode {
     @Override
     public void runOpMode() {
         //GamepadEx gamepadEx = new GamepadEx(gamepad2); // probably not needed...
+        DcMotor hang = hardwareMap.get(DcMotor.class, "hang");
+        hang.setDirection(DcMotorSimple.Direction.REVERSE);
+        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Makes the motors output their rotation
+        /*linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
+
         DcMotor linearSlide = hardwareMap.get(DcMotor.class, "linear_slide");
         linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -75,8 +82,9 @@ public class YaelDriveJr extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Define joystick controls
-            double moveSlide = -gamepad2.right_stick_y;
+            double moveSlide = -gamepad2.left_stick_y;
             //double moveSlide = gamepad2.left_trigger - gamepad2.right_trigger;
+            double moveHang = -gamepad2.right_stick_y;
 
             boolean toggleArm = gamepad2.left_bumper;
             boolean toggleGrabber = gamepad2.right_bumper;
@@ -125,7 +133,7 @@ public class YaelDriveJr extends LinearOpMode {
                 backRightPower *= changeInSpeed;
             }
 
-            double roundDown = 0.1;
+            double roundDown = 0.05;
             if (Math.abs(frontLeftPower) <= roundDown) {
                 frontLeftPower = 0;
             }
@@ -155,10 +163,10 @@ public class YaelDriveJr extends LinearOpMode {
             double linearSlowDown = 0.75;
             linearSlide.setPower(moveSlide * linearSlowDown);
 
+            // Move hang
+            hang.setPower(moveHang)
+
             telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
-            telemetry.addData("Arm Servo", armServo.getPosition());
-            telemetry.addData("Wrist Servo", wristServo.getPosition());
-            telemetry.addData("Grabber Servo", grabber.getPosition());
             //*
             if (armPos1) { // right (good)
                 armServo.setPosition(0.1); // down
