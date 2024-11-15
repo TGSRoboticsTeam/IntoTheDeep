@@ -122,7 +122,7 @@ public class BasicOmniAuto extends LinearOpMode {
        //driveByTime(-.25,4);
        //strafeByTime(-.5,4);
         //dropAndTouch3();
-        driveByTime(.1,2);
+      /*  driveByTime(.1,2);
         wristServo.setPosition(1);//good
         grabber.setPosition(1);//good
         armServo.setPosition(1);
@@ -133,7 +133,8 @@ public class BasicOmniAuto extends LinearOpMode {
         driveByTime(.1,2);
         wristServo.setPosition(0);
         grabber.setPosition(0);
-        armServo.setPosition(0);
+        armServo.setPosition(0);*/
+        krabbyPatty();
 
 
     }
@@ -279,7 +280,7 @@ public class BasicOmniAuto extends LinearOpMode {
     public void krabbyPatty(){
         //Mr. Krabs with another sample
         wristServo.setPosition(1);
-        grabber.setPosition(1);
+        grabber.setPosition(0.75);
         armServo.setPosition(.5);
         driveByTime(.25,1.6);
         driveByTime(0,1.5);
