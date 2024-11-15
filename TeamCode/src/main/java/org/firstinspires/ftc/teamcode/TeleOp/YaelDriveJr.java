@@ -24,11 +24,8 @@ public class YaelDriveJr extends LinearOpMode {
     public void runOpMode() {
         //GamepadEx gamepadEx = new GamepadEx(gamepad2); // probably not needed...
         DcMotor hang = hardwareMap.get(DcMotor.class, "hang");
-        hang.setDirection(DcMotorSimple.Direction.REVERSE);
+        hang.setDirection(DcMotorSimple.Direction.FORWARD);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // Makes the motors output their rotation
-        /*linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
 
         DcMotor linearSlide = hardwareMap.get(DcMotor.class, "linear_slide");
         linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -63,9 +60,9 @@ public class YaelDriveJr extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
-        double changeInSpeed = 0.2;
+        double changeInSpeed = 0.35;
         boolean justGrabbed = false;
-        boolean justMovedArm = false;
+        //String returnArmPos = "awaiting input...";
 
         // Retrieve the IMU from the hardware map
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -82,30 +79,31 @@ public class YaelDriveJr extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Define joystick controls
-            double moveSlide = -gamepad2.left_stick_y;
             //double moveSlide = gamepad2.left_trigger - gamepad2.right_trigger;
-            double moveHang = -gamepad2.right_stick_y;
+            double moveSlide = -gamepad2.right_stick_y;
+            double moveHang = -gamepad2.left_stick_y;
 
-            boolean toggleArm = gamepad2.left_bumper;
-            boolean toggleGrabber = gamepad2.right_bumper;
+            boolean toggleGrabber = gamepad2.right_trigger >= 0.1;
 
-            /*boolean toggleArm = gamepad1.x;
-            boolean toggleGrabber = gamepad1.y;*/
-            boolean closeGrabber = gamepad2.b;
-            boolean openGrabber = gamepad2.a;
+            boolean closeGrabber = gamepad1.a;
+            boolean openGrabber = gamepad1.b;
 
-            boolean armPos1 = gamepad2.dpad_right;
-            boolean armPos2 = gamepad2.dpad_up;
-            boolean armPos3 = gamepad2.dpad_left;
-            boolean armPos4 = gamepad2.dpad_down;
+            boolean armPosScoop = gamepad2.dpad_right;
+            boolean armPosUp = gamepad2.dpad_up;
+            boolean armPosFlat = gamepad2.dpad_left;
+            boolean armPosDown = gamepad2.dpad_down;
 
             // Drive
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
 
-            boolean slowDown = gamepad1.left_bumper;
+            boolean slowDown = gamepad1.right_bumper || gamepad1.right_trigger > 0.1;
 
+            if (gamepad2.left_bumper && linearSlide.getCurrentPosition() <= 295) {// && moveSlide < 0.1) {
+                linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+                linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+            }
             if (gamepad1.dpad_up) {
                 imu.resetYaw();
             }
@@ -115,6 +113,7 @@ public class YaelDriveJr extends LinearOpMode {
             // Rotate the movement direction counter to the bots rotation
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+            rotX = -rotX;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
@@ -168,18 +167,18 @@ public class YaelDriveJr extends LinearOpMode {
 
             telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
             //*
-            if (armPos1) { // right (good)
-                armServo.setPosition(0.1); // down
-                wristServo.setPosition(0.9); // down
-            }else if (armPos2) { // up (good)
+            if (armPosDown) { // right (good) x = 0.05
+                armServo.setPosition(0.15); // down 0.1 + x
+                wristServo.setPosition(1.0); // down 0.9 + 2x
+            }else if (armPosUp) { // up (good)
                 armServo.setPosition(0.5); // up
                 wristServo.setPosition(1.0); // up
-            }else if (armPos3) { // left (good)
+            }else if (armPosFlat) { // left (good)
                 armServo.setPosition(0.3); // flat
                 wristServo.setPosition(0.8); // flat
-            }else if (armPos4) { // down (good)
+            }else if (armPosScoop) { // down (good)
                 armServo.setPosition(0); // scoop
-                wristServo.setPosition(0.5); // scoop
+                wristServo.setPosition(0.55); // scoop
             }
 
             // Grabbing
@@ -191,27 +190,12 @@ public class YaelDriveJr extends LinearOpMode {
                 } else {
                     grabber.setPosition(grabbingPos);
                 }
-            } else if (openGrabber) {
+            /*} else if (openGrabber) {
                 grabber.setPosition(grabbingPos);
             } else if (closeGrabber) {
-                grabber.setPosition(0.5);
+                grabber.setPosition(0.5); */
             } else if (!toggleGrabber) {
                 justGrabbed = false;
-            }
-
-            // Arm rotate
-            double armPos = 0.6;
-            if (toggleArm && !justMovedArm) {
-                justMovedArm = true;
-                if (Math.round(armServo.getPosition() * 10) / 10 == armPos) { // weird math just rounds to tenths place
-                    armServo.setPosition(0); // scoop
-                    wristServo.setPosition(0.5); // scoop
-                } else {
-                    armServo.setPosition(armPos);
-                    wristServo.setPosition(0.8); // parallel to arm
-                }
-            } else if (!toggleArm) {
-                justMovedArm = false;
             }
             //*/
 
