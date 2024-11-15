@@ -23,6 +23,10 @@ public class LonelyDrive extends LinearOpMode {
     @Override
     public void runOpMode() {
         //GamepadEx gamepadEx = new GamepadEx(gamepad2); // probably not needed...
+        DcMotor hang = hardwareMap.get(DcMotor.class, "hang");
+        hang.setDirection(DcMotorSimple.Direction.FORWARD);
+        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
         DcMotor linearSlide = hardwareMap.get(DcMotor.class, "linear_slide");
         linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
@@ -56,9 +60,7 @@ public class LonelyDrive extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
-        double changeInSpeed = 0.2;
-        boolean justGrabbed = false;
-        boolean justMovedArm = false;
+        double changeInSpeed = 0.5;
 
         // Retrieve the IMU from the hardware map
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -75,30 +77,34 @@ public class LonelyDrive extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Define joystick controls
-            double moveSlide = -gamepad2.right_stick_y;
-            //double moveSlide = gamepad2.left_trigger - gamepad2.right_trigger;
+            double moveSlide = gamepad1.left_trigger - gamepad1.right_trigger;
 
-            boolean toggleArm = gamepad2.left_bumper;
-            boolean toggleGrabber = gamepad2.right_bumper;
+            boolean pressingY = gamepad1.y;
+            boolean pressingX = gamepad1.x;
+            double moveHang = 0;
+            if (pressingY) {
+                moveHang += 1;
+            }
+            if (pressingX) {
+                moveHang -= 1;
+            }
 
-            /*boolean toggleArm = gamepad1.x;
-            boolean toggleGrabber = gamepad1.y;*/
-            boolean closeGrabber = gamepad2.b;
-            boolean openGrabber = gamepad2.a;
+            boolean closeGrabber = gamepad1.a;
+            boolean openGrabber = gamepad1.b;
 
-            boolean armPos1 = gamepad2.dpad_right;
-            boolean armPos2 = gamepad2.dpad_up;
-            boolean armPos3 = gamepad2.dpad_left;
-            boolean armPos4 = gamepad2.dpad_down;
+            boolean armPosScoop = gamepad1.dpad_right;
+            boolean armPosUp = gamepad1.dpad_up;
+            boolean armPosFlat = gamepad1.dpad_left;
+            boolean armPosDown = gamepad1.dpad_down;
 
             // Drive
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
             double rx = gamepad1.right_stick_x;
 
-            boolean slowDown = gamepad1.left_bumper;
+            boolean slowDown = gamepad1.right_bumper;
 
-            if (gamepad1.dpad_up) {
+            if (gamepad1.left_bumper) {
                 imu.resetYaw();
             }
 
@@ -107,6 +113,7 @@ public class LonelyDrive extends LinearOpMode {
             // Rotate the movement direction counter to the bots rotation
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+            rotX = -rotX;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
@@ -145,6 +152,9 @@ public class LonelyDrive extends LinearOpMode {
             rightBackDrive.setPower(backRightPower);
 
             //////////////// OTHER COMPONENTS //////////////////
+            // Move hang
+            hang.setPower(moveHang);
+
             if (linearSlide.getCurrentPosition() >= 2210 && moveSlide > 0) {
                 moveSlide = 0;
             } else if (linearSlide.getCurrentPosition() <= 2 && moveSlide < 0) {
@@ -160,50 +170,26 @@ public class LonelyDrive extends LinearOpMode {
             telemetry.addData("Wrist Servo", wristServo.getPosition());
             telemetry.addData("Grabber Servo", grabber.getPosition());*/
             //*
-            if (armPos1) { // right (good)
+            if (armPosDown) { // right (good)
                 armServo.setPosition(0.1); // down
                 wristServo.setPosition(0.9); // down
-            }else if (armPos2) { // up (good)
+            }else if (armPosUp) { // up (good)
                 armServo.setPosition(0.5); // up
                 wristServo.setPosition(1.0); // up
-            }else if (armPos3) { // left (good)
+            }else if (armPosFlat) { // left (good)
                 armServo.setPosition(0.3); // flat
                 wristServo.setPosition(0.8); // flat
-            }else if (armPos4) { // down (good)
+            }else if (armPosScoop) { // down (good)
                 armServo.setPosition(0); // scoop
                 wristServo.setPosition(0.5); // scoop
             }
 
             // Grabbing
             double grabbingPos = 1;
-            if (toggleGrabber && !justGrabbed) {
-                justGrabbed = true;
-                if (grabber.getPosition() == grabbingPos) {
-                    grabber.setPosition(0.5);
-                } else {
-                    grabber.setPosition(grabbingPos);
-                }
-            } else if (openGrabber) {
+            if (openGrabber) {
                 grabber.setPosition(grabbingPos);
             } else if (closeGrabber) {
                 grabber.setPosition(0.5);
-            } else if (!toggleGrabber) {
-                justGrabbed = false;
-            }
-
-            // Arm rotate
-            double armPos = 0.6;
-            if (toggleArm && !justMovedArm) {
-                justMovedArm = true;
-                if (Math.round(armServo.getPosition() * 10) / 10 == armPos) { // weird math just rounds to tenths place
-                    armServo.setPosition(0); // scoop
-                    wristServo.setPosition(0.5); // scoop
-                } else {
-                    armServo.setPosition(armPos);
-                    wristServo.setPosition(0.8); // parallel to arm
-                }
-            } else if (!toggleArm) {
-                justMovedArm = false;
             }
             //*/
 

@@ -24,11 +24,8 @@ public class YaelDriveJr extends LinearOpMode {
     public void runOpMode() {
         //GamepadEx gamepadEx = new GamepadEx(gamepad2); // probably not needed...
         DcMotor hang = hardwareMap.get(DcMotor.class, "hang");
-        hang.setDirection(DcMotorSimple.Direction.REVERSE);
+        hang.setDirection(DcMotorSimple.Direction.FORWARD);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        // Makes the motors output their rotation
-        /*linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);*/
 
         DcMotor linearSlide = hardwareMap.get(DcMotor.class, "linear_slide");
         linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
@@ -63,9 +60,10 @@ public class YaelDriveJr extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
-        double changeInSpeed = 0.2;
+        double changeInSpeed = 0.5;
         boolean justGrabbed = false;
         boolean justMovedArm = false;
+        //String returnArmPos = "awaiting input...";
 
         // Retrieve the IMU from the hardware map
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -82,22 +80,20 @@ public class YaelDriveJr extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Define joystick controls
-            double moveSlide = -gamepad2.left_stick_y;
             //double moveSlide = gamepad2.left_trigger - gamepad2.right_trigger;
-            double moveHang = -gamepad2.right_stick_y;
+            double moveSlide = -gamepad2.right_stick_y;
+            double moveHang = -gamepad2.left_stick_y;
 
             boolean toggleArm = gamepad2.left_bumper;
             boolean toggleGrabber = gamepad2.right_bumper;
 
-            /*boolean toggleArm = gamepad1.x;
-            boolean toggleGrabber = gamepad1.y;*/
             boolean closeGrabber = gamepad2.b;
             boolean openGrabber = gamepad2.a;
 
-            boolean armPos1 = gamepad2.dpad_right;
-            boolean armPos2 = gamepad2.dpad_up;
-            boolean armPos3 = gamepad2.dpad_left;
-            boolean armPos4 = gamepad2.dpad_down;
+            boolean armPosScoop = gamepad1.dpad_right;
+            boolean armPosUp = gamepad1.dpad_up;
+            boolean armPosFlat = gamepad1.dpad_left;
+            boolean armPosDown = gamepad1.dpad_down;
 
             // Drive
             double y = -gamepad1.left_stick_y;
@@ -115,6 +111,7 @@ public class YaelDriveJr extends LinearOpMode {
             // Rotate the movement direction counter to the bots rotation
             double rotX = x * Math.cos(-botHeading) - y * Math.sin(-botHeading);
             double rotY = x * Math.sin(-botHeading) + y * Math.cos(-botHeading);
+            rotX = -rotX;
 
             // Denominator is the largest motor power (absolute value) or 1
             // This ensures all the powers maintain the same ratio, but only when
@@ -164,22 +161,22 @@ public class YaelDriveJr extends LinearOpMode {
             linearSlide.setPower(moveSlide * linearSlowDown);
 
             // Move hang
-            hang.setPower(moveHang)
+            hang.setPower(moveHang);
 
             telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
             //*
-            if (armPos1) { // right (good)
+            if (armPosDown) { // right (good)
                 armServo.setPosition(0.1); // down
                 wristServo.setPosition(0.9); // down
-            }else if (armPos2) { // up (good)
+            }else if (armPosUp) { // up (good)
                 armServo.setPosition(0.5); // up
                 wristServo.setPosition(1.0); // up
-            }else if (armPos3) { // left (good)
+            }else if (armPosFlat) { // left (good)
                 armServo.setPosition(0.3); // flat
                 wristServo.setPosition(0.8); // flat
-            }else if (armPos4) { // down (good)
+            }else if (armPosScoop) { // down (good)
                 armServo.setPosition(0); // scoop
-                wristServo.setPosition(0.5); // scoop
+                wristServo.setPosition(0.55); // scoop
             }
 
             // Grabbing
