@@ -60,7 +60,7 @@ public class LonelyDrive extends LinearOpMode {
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
-        double changeInSpeed = 0.5;
+        double changeInSpeed = 0.35;
 
         // Retrieve the IMU from the hardware map
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -170,9 +170,9 @@ public class LonelyDrive extends LinearOpMode {
             telemetry.addData("Wrist Servo", wristServo.getPosition());
             telemetry.addData("Grabber Servo", grabber.getPosition());*/
             //*
-            if (armPosDown) { // right (good)
-                armServo.setPosition(0.1); // down
-                wristServo.setPosition(0.9); // down
+            if (armPosDown) { // right (good) x = 0.05
+                armServo.setPosition(0.15); // down 0.1 + x
+                wristServo.setPosition(1.0); // down 0.9 + 2x
             }else if (armPosUp) { // up (good)
                 armServo.setPosition(0.5); // up
                 wristServo.setPosition(1.0); // up
