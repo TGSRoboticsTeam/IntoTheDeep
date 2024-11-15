@@ -122,6 +122,18 @@ public class BasicOmniAuto extends LinearOpMode {
        //driveByTime(-.25,4);
        //strafeByTime(-.5,4);
         //dropAndTouch3();
+      /*  driveByTime(.1,2);
+        wristServo.setPosition(1);//good
+        grabber.setPosition(1);//good
+        armServo.setPosition(1);
+        strafeByTime(.1,2);
+        wristServo.setPosition(0.5);
+        grabber.setPosition(0.5);
+        armServo.setPosition(0.5);//good
+        driveByTime(.1,2);
+        wristServo.setPosition(0);
+        grabber.setPosition(0);
+        armServo.setPosition(0);*/
         krabbyPatty();
 
 
@@ -155,10 +167,10 @@ public class BasicOmniAuto extends LinearOpMode {
         //move sideways
         runtime.reset();
         while(runtime.seconds() < time) {
-            leftFrontDrive.setPower(power);
-            rightFrontDrive.setPower(-power);
-            leftBackDrive.setPower(-power);
-            rightBackDrive.setPower(power);
+            leftFrontDrive.setPower(-power);
+            rightFrontDrive.setPower(power);
+            leftBackDrive.setPower(power);
+            rightBackDrive.setPower(-power);
         }
         // Show the elapsed game time and wheel power.
         //telemetry.addData("Status", "Run Time: " + runtime.toString());
@@ -267,8 +279,9 @@ public class BasicOmniAuto extends LinearOpMode {
     //arm = hand, grabber = wrist, wrist=arm
     public void krabbyPatty(){
         //Mr. Krabs with another sample
-        wristServo.setPosition(0.5);
-        grabber.setPosition(.5);
+        wristServo.setPosition(1);
+        grabber.setPosition(0.75);
+        armServo.setPosition(.5);
         driveByTime(.25,1.6);
         driveByTime(0,1.5);
         driveByTime(0,1.5);
