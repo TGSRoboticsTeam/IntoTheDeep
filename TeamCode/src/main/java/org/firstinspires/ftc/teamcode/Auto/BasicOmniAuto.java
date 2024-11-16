@@ -29,12 +29,19 @@
 
 package org.firstinspires.ftc.teamcode.Auto;
 
+import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
+import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+
+
+import org.firstinspires.ftc.robotcore.external.Telemetry;
+import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -77,10 +84,12 @@ public class BasicOmniAuto extends LinearOpMode {
     private Servo armServo = null;
     private Servo wristServo=null;
     private Servo grabber = null;
+    private   DcMotor linearSlide = null;
 
     @Override
     public void runOpMode() {
-
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry dashboardTelemetry = dashboard.getTelemetry();
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
@@ -90,6 +99,13 @@ public class BasicOmniAuto extends LinearOpMode {
         armServo = hardwareMap.get(Servo.class, "arm_servo");
         wristServo = hardwareMap.get(Servo.class, "wrist_servo");
         grabber = hardwareMap.get(Servo.class, "grabber_servo");
+
+        linearSlide = hardwareMap.get(DcMotor.class, "linear_slide");
+        linearSlide.setDirection(DcMotorSimple.Direction.REVERSE);
+        linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+        // Makes the motors output their rotation
+        linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         // ########################################################################################
         // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
@@ -134,6 +150,8 @@ public class BasicOmniAuto extends LinearOpMode {
         wristServo.setPosition(0);
         grabber.setPosition(0);
         armServo.setPosition(0);*/
+        //krabbyPatty();
+        //goFish();
         krabbyPatty();
 
 
@@ -276,14 +294,51 @@ public class BasicOmniAuto extends LinearOpMode {
 
    */
 
-    //arm = hand, grabber = wrist, wrist=arm
     public void krabbyPatty(){
-        //Mr. Krabs with another sample
-        wristServo.setPosition(1);
-        grabber.setPosition(0.75);
-        armServo.setPosition(.5);
+        wristServo.setPosition(0.8);
+        grabber.setPosition(1.1);
+        armServo.setPosition(0.5);
         driveByTime(.25,1.6);
+        armServo.setPosition(.3);
+        driveByTime(0,0.1);
         driveByTime(0,1.5);
+        driveByTime(-.25,1); //back away
+        armServo.setPosition(.3);
+        grabber.setPosition(0.5);
+        wristServo.setPosition(0.5);
+        strafeByTime(-.5,1.2);
+        driveByTime(.5,1.2);
+        strafeByTime(-.25,0.5);
+        bestRotateByTime(.25,.5);//turn a little to the right - one wheel
+        driveByTime(-.5,1.2); //c
+        driveByTime(-.25,0.5);
+        driveByTime(.5,1.4);
+        strafeByTime(-.5,.4);
+        driveByTime(-.5,1.4);//b
+        driveByTime(-.25,0.5);
+        driveByTime(.5,1.5);
+        strafeByTime(-.5,.3);
+        strafeByTime(-.25, .3);
+        driveByTime(-.5,1.6);//A
+        driveByTime(-.25,1);
+        driveByTime(.5,1.6);
+        strafeByTime(.5,1.2);
+        strafeByTime(.25,.9);
+        strafeByTime(.1,1.5);
+
+    }
+}
+
+    //arm = hand, grabber = wrist, wrist=arm
+    /*public void patrick(){
+        //Mr. Krabs with another sample
+        wristServo.setPosition(0.8);
+        grabber.setPosition(1);
+        armServo.setPosition(0.5);
+        driveByTime(.25,1.6);
+        armServo.setPosition(.3);
+        driveByTime(0,0.1);
+        wristServo.setPosition(0.55);
         driveByTime(0,1.5);
         strafeByTime(-.5,1.7);
         driveByTime(.5,1.4);
@@ -305,6 +360,37 @@ public class BasicOmniAuto extends LinearOpMode {
         strafeByTime(.25,.5);
     }
 
+    public void goFish(){
+        telemetry.addData("linear slide: ", "%.1f", (double)linearSlide.getCurrentPosition());
+        telemetry.update();
+        double linearSlowDown = 0.15;
+        //linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
+        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        grabber.setPosition(1);
+        runtime.reset();
+        double lt = 2;
+        while(runtime.seconds() < lt) {
+            linearSlide.setPower(1.0);
+        }
+        linearSlide.setPower(0.0);
+        wristServo.setPosition(0.75);
+        driveByTime(0,3);
+
+        armServo.setPosition(.5);
+        driveByTime(.1,1.5);
+        driveByTime(0,3);
+
+        grabber.setPosition(0);
+        driveByTime(0,1.5);
+
+        driveByTime(0,1.5);
+
+    }
+
+    public void goSwimming(){
+
+    }
+
 
 
 
@@ -312,4 +398,4 @@ public class BasicOmniAuto extends LinearOpMode {
 
 
 }
-
+*/
