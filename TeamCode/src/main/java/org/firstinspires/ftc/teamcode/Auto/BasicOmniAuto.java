@@ -306,7 +306,7 @@ public class BasicOmniAuto extends LinearOpMode {
         armServo.setPosition(.3);
         grabber.setPosition(0.5);
         wristServo.setPosition(0.5);
-        strafeByTime(-.5,1.2);
+        strafeByTime(-.5,1.2); //offset from start X
         driveByTime(.5,1.2);
         strafeByTime(-.25,0.5);
         bestRotateByTime(.25,.5);//turn a little to the right - one wheel
