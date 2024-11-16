@@ -83,10 +83,10 @@ public class YaelDriveJr extends LinearOpMode {
             double moveSlide = -gamepad2.right_stick_y;
             double moveHang = -gamepad2.left_stick_y;
 
-            boolean toggleGrabber = gamepad2.right_trigger >= 0.1;
+            boolean toggleGrabber = gamepad2.right_bumper || gamepad2.right_trigger >= 0.1;
 
-            boolean closeGrabber = gamepad1.a;
-            boolean openGrabber = gamepad1.b;
+            boolean closeGrabber = gamepad2.a;
+            boolean openGrabber = gamepad2.b;
 
             boolean armPosScoop = gamepad2.dpad_right;
             boolean armPosUp = gamepad2.dpad_up;
@@ -166,10 +166,11 @@ public class YaelDriveJr extends LinearOpMode {
             hang.setPower(moveHang);
 
             telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
+            telemetry.addData("Right Trigger", toggleGrabber);
             //*
-            if (armPosDown) { // right (good) x = 0.05
-                armServo.setPosition(0.15); // down 0.1 + x
-                wristServo.setPosition(1.0); // down 0.9 + 2x
+            if (armPosDown) { // right (good) x = 0.055
+                armServo.setPosition(0.155); // down 0.1 + x
+                wristServo.setPosition(1.1); // down 0.9 + 2x
             }else if (armPosUp) { // up (good)
                 armServo.setPosition(0.5); // up
                 wristServo.setPosition(1.0); // up
@@ -178,7 +179,7 @@ public class YaelDriveJr extends LinearOpMode {
                 wristServo.setPosition(0.8); // flat
             }else if (armPosScoop) { // down (good)
                 armServo.setPosition(0); // scoop
-                wristServo.setPosition(0.55); // scoop
+                wristServo.setPosition(0.57); // scoop 0.55
             }
 
             // Grabbing
@@ -190,11 +191,11 @@ public class YaelDriveJr extends LinearOpMode {
                 } else {
                     grabber.setPosition(grabbingPos);
                 }
-            /*} else if (openGrabber) {
+            }/* else if (openGrabber) {
                 grabber.setPosition(grabbingPos);
             } else if (closeGrabber) {
-                grabber.setPosition(0.5); */
-            } else if (!toggleGrabber) {
+                grabber.setPosition(0.5);
+            }*/ else if (!toggleGrabber) {
                 justGrabbed = false;
             }
             //*/

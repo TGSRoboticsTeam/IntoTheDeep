@@ -170,9 +170,9 @@ public class LonelyDrive extends LinearOpMode {
             telemetry.addData("Wrist Servo", wristServo.getPosition());
             telemetry.addData("Grabber Servo", grabber.getPosition());*/
             //*
-            if (armPosDown) { // right (good) x = 0.05
-                armServo.setPosition(0.15); // down 0.1 + x
-                wristServo.setPosition(1.0); // down 0.9 + 2x
+            if (armPosDown) { // right (good) x = 0.055
+                armServo.setPosition(0.155); // down 0.1 + x
+                wristServo.setPosition(1.1); // down 0.9 + 2x
             }else if (armPosUp) { // up (good)
                 armServo.setPosition(0.5); // up
                 wristServo.setPosition(1.0); // up
@@ -181,7 +181,7 @@ public class LonelyDrive extends LinearOpMode {
                 wristServo.setPosition(0.8); // flat
             }else if (armPosScoop) { // down (good)
                 armServo.setPosition(0); // scoop
-                wristServo.setPosition(0.5); // scoop
+                wristServo.setPosition(0.57); // scoop 0.55
             }
 
             // Grabbing
