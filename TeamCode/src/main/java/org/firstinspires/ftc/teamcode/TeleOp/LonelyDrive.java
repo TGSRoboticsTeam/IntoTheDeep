@@ -16,10 +16,10 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 import org.firstinspires.ftc.robotcore.external.navigation.YawPitchRollAngles;
 
-//@Disabled
-@TeleOp(name = "YaelDriveJr", group = "YaelDriveJr")
+@Disabled
+@TeleOp(name = "LonelyDrive", group = "LonelyDrive")
 
-public class YaelDriveJr extends LinearOpMode {
+public class LonelyDrive extends LinearOpMode {
     @Override
     public void runOpMode() {
         //GamepadEx gamepadEx = new GamepadEx(gamepad2); // probably not needed...
@@ -61,8 +61,6 @@ public class YaelDriveJr extends LinearOpMode {
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
 
         double changeInSpeed = 0.35;
-        boolean justGrabbed = false;
-        //String returnArmPos = "awaiting input...";
 
         // Retrieve the IMU from the hardware map
         IMU imu = hardwareMap.get(IMU.class, "imu");
@@ -79,32 +77,34 @@ public class YaelDriveJr extends LinearOpMode {
 
         while (opModeIsActive()) {
             // Define joystick controls
-            //double moveSlide = gamepad2.left_trigger - gamepad2.right_trigger;
-            double moveSlide = -gamepad2.right_stick_y;
-            double moveHang = -gamepad2.left_stick_y;
+            double moveSlide = gamepad1.left_trigger - gamepad1.right_trigger;
 
-            boolean toggleGrabber = gamepad2.right_bumper || gamepad2.right_trigger >= 0.1;
+            boolean pressingY = gamepad1.y;
+            boolean pressingX = gamepad1.x;
+            double moveHang = 0;
+            if (pressingY) {
+                moveHang += 1;
+            }
+            if (pressingX) {
+                moveHang -= 1;
+            }
 
-            boolean closeGrabber = gamepad2.a;
-            boolean openGrabber = gamepad2.b;
+            boolean closeGrabber = gamepad1.a;
+            boolean openGrabber = gamepad1.b;
 
-            boolean armPosScoop = gamepad2.dpad_right;
-            boolean armPosUp = gamepad2.dpad_up;
-            boolean armPosFlat = gamepad2.dpad_left;
-            boolean armPosDown = gamepad2.dpad_down;
+            boolean armPosScoop = gamepad1.dpad_right;
+            boolean armPosUp = gamepad1.dpad_up;
+            boolean armPosFlat = gamepad1.dpad_left;
+            boolean armPosDown = gamepad1.dpad_down;
 
             // Drive
             double y = -gamepad1.left_stick_y;
             double x = gamepad1.left_stick_x;
             double rot = gamepad1.right_stick_x;
 
-            boolean slowDown = gamepad1.right_bumper || gamepad1.right_trigger > 0.1;
+            boolean slowDown = gamepad1.right_bumper;
 
-            if (gamepad2.left_bumper && linearSlide.getCurrentPosition() <= 295) {// && moveSlide < 0.1) {
-                linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-                linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
-            }
-            if (gamepad1.dpad_up) {
+            if (gamepad1.left_bumper) {
                 imu.resetYaw();
             }
 
@@ -132,7 +132,7 @@ public class YaelDriveJr extends LinearOpMode {
                 backRightPower *= changeInSpeed;
             }
 
-            double roundDown = 0.05;
+            double roundDown = 0.1;
             if (Math.abs(frontLeftPower) <= roundDown) {
                 frontLeftPower = 0;
             }
@@ -152,21 +152,23 @@ public class YaelDriveJr extends LinearOpMode {
             rightBackDrive.setPower(backRightPower);
 
             //////////////// OTHER COMPONENTS //////////////////
+            // Move hang
+            hang.setPower(moveHang);
+
             if (linearSlide.getCurrentPosition() >= 2210 && moveSlide > 0) {
                 moveSlide = 0;
             } else if (linearSlide.getCurrentPosition() <= 2 && moveSlide < 0) {
                 moveSlide = 0;
-            } else if (moveSlide == 0 && linearSlide.getCurrentPosition() >= 0) {
+            } else if (moveSlide == 0 && linearSlide.getCurrentPosition() >= 0 && linearSlide.getCurrentPosition() < 2210) {
                 moveSlide = 0.1;
             }
             double linearSlowDown = 0.75;
             linearSlide.setPower(moveSlide * linearSlowDown);
 
-            // Move hang
-            hang.setPower(moveHang);
-
             telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
-            telemetry.addData("Right Trigger", toggleGrabber);
+            /*telemetry.addData("Arm Servo", armServo.getPosition());
+            telemetry.addData("Wrist Servo", wristServo.getPosition());
+            telemetry.addData("Grabber Servo", grabber.getPosition());*/
             //*
             if (armPosDown) { // right (good) x = 0.055
                 armServo.setPosition(0.155); // down 0.1 + x
@@ -184,19 +186,10 @@ public class YaelDriveJr extends LinearOpMode {
 
             // Grabbing
             double grabbingPos = 1;
-            if (toggleGrabber && !justGrabbed) {
-                justGrabbed = true;
-                if (grabber.getPosition() == grabbingPos) {
-                    grabber.setPosition(0.5);
-                } else {
-                    grabber.setPosition(grabbingPos);
-                }
-            }/* else if (openGrabber) {
+            if (openGrabber) {
                 grabber.setPosition(grabbingPos);
             } else if (closeGrabber) {
                 grabber.setPosition(0.5);
-            }*/ else if (!toggleGrabber) {
-                justGrabbed = false;
             }
             //*/
 

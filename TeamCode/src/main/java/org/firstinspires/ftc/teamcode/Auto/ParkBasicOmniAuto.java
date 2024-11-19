@@ -32,16 +32,12 @@ package org.firstinspires.ftc.teamcode.Auto;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -71,9 +67,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Basic: Omni Auto", group="Linear OpMode")
+@Autonomous(name="Basic Park: Omni Auto", group="Linear OpMode")
 //@Disabled
-public class BasicOmniAuto extends LinearOpMode {
+public class ParkBasicOmniAuto extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -152,8 +148,8 @@ public class BasicOmniAuto extends LinearOpMode {
         armServo.setPosition(0);*/
         //krabbyPatty();
         //goFish();
-        krabbyPatty();
-
+       // krabbyPatty();
+       dock();
 
     }
 
@@ -204,7 +200,9 @@ public class BasicOmniAuto extends LinearOpMode {
             leftFrontDrive.setPower(power);
         }
     }
-
+    public void dock(){
+        driveByTime(.5,1.5);
+    }
 
   /*  public void diagByTime(double power,double power2, double time ){
         // Send calculated power to wheels
@@ -297,9 +295,7 @@ public class BasicOmniAuto extends LinearOpMode {
     public void krabbyPatty(){
         wristServo.setPosition(0.8);
         grabber.setPosition(1.1);
-        armServo.setPosition(1);
-        driveByTime(0,1.6);
-
+        armServo.setPosition(0.6);
         driveByTime(.25,1.6);
         armServo.setPosition(.3);
         driveByTime(0,0.1);
