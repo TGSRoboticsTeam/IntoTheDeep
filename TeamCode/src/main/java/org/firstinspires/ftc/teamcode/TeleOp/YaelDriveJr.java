@@ -168,9 +168,9 @@ public class YaelDriveJr extends LinearOpMode {
             telemetry.addData("Linear Slide", linearSlide.getCurrentPosition());
             telemetry.addData("Right Trigger", toggleGrabber);
             //*
-            if (armPosDown) { // right (good) x = 0.055
-                armServo.setPosition(0.155); // down 0.1 + x
-                wristServo.setPosition(1.1); // down 0.9 + 2x
+            if (armPosDown) { // right (good) x = 0.17
+                armServo.setPosition(0.18); // down 0.1 + x
+                wristServo.setPosition(4.2); // down 0.9 + 2x
             }else if (armPosUp) { // up (good)
                 armServo.setPosition(0.5); // up
                 wristServo.setPosition(1.0); // up
@@ -178,8 +178,8 @@ public class YaelDriveJr extends LinearOpMode {
                 armServo.setPosition(0.3); // flat
                 wristServo.setPosition(0.8); // flat
             }else if (armPosScoop) { // down (good)
-                armServo.setPosition(0); // scoop
-                wristServo.setPosition(0.57); // scoop 0.55
+                armServo.setPosition(0.01); // scoop 0.0
+                wristServo.setPosition(0.56); // scoop 0.56
             }
 
             // Grabbing
