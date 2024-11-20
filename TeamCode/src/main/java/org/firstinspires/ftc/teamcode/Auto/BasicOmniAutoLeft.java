@@ -32,16 +32,12 @@ package org.firstinspires.ftc.teamcode.Auto;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
-import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
-import org.firstinspires.ftc.robotcore.external.Telemetry;
-
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 /*
  * This file contains an example of a Linear "OpMode".
@@ -71,9 +67,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Basic: Omni Auto", group="Linear OpMode")
+@Autonomous(name="Basic: Omni Auto Left", group="Linear OpMode")
 //@Disabled
-public class BasicOmniAuto extends LinearOpMode {
+public class BasicOmniAutoLeft extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -85,9 +81,13 @@ public class BasicOmniAuto extends LinearOpMode {
     private Servo wristServo=null;
     private Servo grabber = null;
     private   DcMotor linearSlide = null;
+    private   DcMotor hang = null;
 
     @Override
     public void runOpMode() {
+        hang = hardwareMap.get(DcMotor.class, "hang");
+        hang.setDirection(DcMotorSimple.Direction.FORWARD);
+        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         FtcDashboard dashboard = FtcDashboard.getInstance();
         Telemetry dashboardTelemetry = dashboard.getTelemetry();
         // Initialize the hardware variables. Note that the strings used here must correspond
@@ -295,6 +295,7 @@ public class BasicOmniAuto extends LinearOpMode {
    */
 
     public void krabbyPatty(){
+        driveByTime(0,5.0);
         wristServo.setPosition(0.8);
         grabber.setPosition(1.1);
         armServo.setPosition(1);
@@ -327,6 +328,9 @@ public class BasicOmniAuto extends LinearOpMode {
         strafeByTime(.5,1.2);
         strafeByTime(.25,.9);
         strafeByTime(.1,1.5);
+        hang.setPower(1);
+        driveByTime(0,1);
+        hang.setPower(0);
 
     }
 }
