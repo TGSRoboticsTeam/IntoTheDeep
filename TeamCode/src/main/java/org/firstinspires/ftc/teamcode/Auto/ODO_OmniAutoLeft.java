@@ -185,6 +185,7 @@ public class ODO_OmniAutoLeft extends LinearOpMode {
 
     }
 
+
     public void bestRotateByTime(double power, double time){
         runtime.reset();
         while(runtime.seconds() < time) {
