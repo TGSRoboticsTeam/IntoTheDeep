@@ -34,6 +34,7 @@ import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.LinearOpMode;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.DcMotorSimple;
+import com.qualcomm.robotcore.hardware.I2cDevice;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -67,9 +68,9 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Omni Auto Left", group="Linear OpMode")
+@Autonomous(name="ODO Omni Auto Left", group="Linear OpMode")
 //@Disabled
-public class BasicOmniAutoLeft extends LinearOpMode {
+public class ODO_OmniAutoLeft extends LinearOpMode {
 
     // Declare OpMode members for each of the 4 motors.
     private ElapsedTime runtime = new ElapsedTime();
@@ -82,20 +83,25 @@ public class BasicOmniAutoLeft extends LinearOpMode {
     private Servo grabber = null;
     private   DcMotor linearSlide = null;
     private   DcMotor hang = null;
+    private GoBildaPinpointDriver odo = null;
 
     @Override
     public void runOpMode() {
+
+        FtcDashboard dashboard = FtcDashboard.getInstance();
+        Telemetry dashboardTelemetry = dashboard.getTelemetry();
+
         hang = hardwareMap.get(DcMotor.class, "hang");
         hang.setDirection(DcMotorSimple.Direction.FORWARD);
         hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
-        FtcDashboard dashboard = FtcDashboard.getInstance();
-        Telemetry dashboardTelemetry = dashboard.getTelemetry();
+
         // Initialize the hardware variables. Note that the strings used here must correspond
         // to the names assigned during the robot configuration step on the DS or RC devices.
         leftFrontDrive = hardwareMap.get(DcMotor.class, "left_front_drive");
         leftBackDrive = hardwareMap.get(DcMotor.class, "left_back_drive");
         rightFrontDrive = hardwareMap.get(DcMotor.class, "right_front_drive");
         rightBackDrive = hardwareMap.get(DcMotor.class, "right_back_drive");
+
         armServo = hardwareMap.get(Servo.class, "arm_servo");
         wristServo = hardwareMap.get(Servo.class, "wrist_servo");
         grabber = hardwareMap.get(Servo.class, "grabber_servo");
@@ -105,61 +111,52 @@ public class BasicOmniAutoLeft extends LinearOpMode {
         linearSlide.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
         // Makes the motors output their rotation
         linearSlide.setMode(DcMotor.RunMode.STOP_AND_RESET_ENCODER);
-        linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
+        //linearSlide.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
-        // ########################################################################################
-        // !!!            IMPORTANT Drive Information. Test your motor directions.            !!!!!
-        // ########################################################################################
-        // Most robots need the motors on one side to be reversed to drive forward.
-        // The motor reversals shown here are for a "direct drive" robot (the wheels turn the same direction as the motor shaft)
-        // If your robot has additional gear reductions or uses a right-angled drive, it's important to ensure
-        // that your motors are turning in the correct direction.  So, start out with the reversals here, BUT
-        // when you first test your robot, push the left joystick forward and observe the direction the wheels turn.
-        // Reverse the direction (flip FORWARD <-> REVERSE ) of any wheel that runs backward
-        // Keep testing until ALL the wheels move the robot forward when you push the left joystick forward.
+
+        hang = hardwareMap.get(DcMotor.class, "hang");
+        hang.setDirection(DcMotorSimple.Direction.FORWARD);
+        hang.setZeroPowerBehavior(DcMotor.ZeroPowerBehavior.BRAKE);
+
+
         leftFrontDrive.setDirection(DcMotor.Direction.REVERSE);
         leftBackDrive.setDirection(DcMotor.Direction.REVERSE);
         rightFrontDrive.setDirection(DcMotor.Direction.FORWARD);
         rightBackDrive.setDirection(DcMotor.Direction.FORWARD);
 
+        odo = hardwareMap.get(GoBildaPinpointDriver.class,"odo");
+        odo.setOffsets(-84.0,-168.0);
+        odo.setEncoderResolution(GoBildaPinpointDriver.GoBildaOdometryPods.goBILDA_4_BAR_POD);
+        odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
+        odo.resetPosAndIMU();
         // Wait for the game to start (driver presses START)
-        //telemetry.addData("Status", "Initialized");
-        //telemetry.update();
-
+         telemetry.addData("Status", "Initialized");
+         telemetry.update();
+        odo.update();
         waitForStart();
         runtime.reset();
 
-        // run until the end of the match (driver presses STOP)
-        //while (opModeIsActive()) {
+       while (opModeIsActive()) {
+            odo.update();
+            telemetry.addData("ODO X1:", odo.getPosX());
+            telemetry.update();
+            odoMove(10,0);
 
-        // }
-       //driveByTime(.25,4);
-       //strafeByTime(.25,4);
-       //driveByTime(-.25,4);
-       //strafeByTime(-.5,4);
-        //dropAndTouch3();
-      /*  driveByTime(.1,2);
-        wristServo.setPosition(1);//good
-        grabber.setPosition(1);//good
-        armServo.setPosition(1);
-        strafeByTime(.1,2);
-        wristServo.setPosition(0.5);
-        grabber.setPosition(0.5);
-        armServo.setPosition(0.5);//good
-        driveByTime(.1,2);
-        wristServo.setPosition(0);
-        grabber.setPosition(0);
-        armServo.setPosition(0);*/
+        }
+
+        telemetry.addData("ODO X:", odo.getPosX());
+        telemetry.update();
+
+        driveByTime(0,5);
+        odoMove(10,0);
+
+        telemetry.addData("ODO X:", odo.getPosX());
+        telemetry.update();
+        driveByTime(0,5);
+
         //krabbyPatty();
-        //goFish();
-        krabbyPatty();
-
 
     }
-
-        //telemetry.addData("Testing...");
-        //telemetry.update();
-
 
 
 
@@ -172,14 +169,9 @@ public class BasicOmniAutoLeft extends LinearOpMode {
             leftBackDrive.setPower(power);
             rightBackDrive.setPower(power);
         }
-            // Show the elapsed game time and wheel power.
-            //telemetry.addData("Status", "Run Time: " + runtime.toString());
-           // telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontDrive, rightFrontDrive);
-            //telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackDrive, rightBackDrive);
-            //telemetry.update();
 
 
-    }
+   }
     public void strafeByTime(double power,double time ){
         // Send calculated power to wheels
         //move sideways
@@ -190,11 +182,6 @@ public class BasicOmniAutoLeft extends LinearOpMode {
             leftBackDrive.setPower(power);
             rightBackDrive.setPower(-power);
         }
-        // Show the elapsed game time and wheel power.
-        //telemetry.addData("Status", "Run Time: " + runtime.toString());
-       // telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontDrive, rightFrontDrive);
-       // telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackDrive, rightBackDrive);
-        //telemetry.update();
 
     }
 
@@ -205,30 +192,15 @@ public class BasicOmniAutoLeft extends LinearOpMode {
         }
     }
 
-
-  /*  public void diagByTime(double power,double power2, double time ){
+    public void diagByTime(double power,double power2, double time ) {
         // Send calculated power to wheels
         runtime.reset();
-        while(runtime.seconds() < time) {
+        while (runtime.seconds() < time) {
             leftFrontDrive.setPower(power);
             rightFrontDrive.setPower(-power2);
             leftBackDrive.setPower(-power2);
             rightBackDrive.setPower(power);
-
         }
-        // Show the elapsed game time and wheel power.
-        //telemetry.addData("Status", "Run Time: " + runtime.toString());
-        // telemetry.addData("Front left/Right", "%4.2f, %4.2f", leftFrontDrive, rightFrontDrive);
-        // telemetry.addData("Back  left/Right", "%4.2f, %4.2f", leftBackDrive, rightBackDrive);
-        //telemetry.update();
-
-
-        // diagByTime(.25,.5,3); back right
-        // diagByTime(-.5,-.25,3); back left
-        // diagByTime(.5,.25,3); forward right
-        // diagByTime(-.25,-.5,3); forward left
-
-
     }
 
     public void rotateByTime(double power, int direction, double time) {
@@ -241,7 +213,29 @@ public class BasicOmniAutoLeft extends LinearOpMode {
             rightBackDrive.setPower(power * direction);
         }
     }
+    public void odoMove(double distanceX,double distanceY){
+        odo.update();
+        telemetry.addData("ODO X:Move", odo.getPosX());
 
+        telemetry.update();
+        driveByTime(0,5);
+        double startX = odo.getPosX();
+        double startY = odo.getPosY();
+        //move in +X direction
+        if(distanceX>0) {
+            while (odo.getPosX() - startX<distanceX) {
+                telemetry.addData("ODO X:Move", " "+odo.getPosX(),startX,distanceX);
+                driveByTime(.5, .1);
+            }
+        }
+        driveByTime(0,5);
+        telemetry.addData("ODO X:Move", odo.getPosX());
+        telemetry.update();
+
+    }
+
+
+    ///Specific Routines*********************
     public void lightHouse(){
         strafeByTime(.25,0.25);//right off the wall
         driveByTime(.25,5);//forward
@@ -249,7 +243,6 @@ public class BasicOmniAutoLeft extends LinearOpMode {
         driveByTime(-.25,2);//back
         strafeByTime(.25,2); //right
         driveByTime(-.25,2);//back
-
     }
     public void vortex(){
         driveByTime(.25,4);
@@ -292,8 +285,6 @@ public class BasicOmniAutoLeft extends LinearOpMode {
         strafeByTime(.5,2.5);
     }
 
-   */
-
     public void krabbyPatty(){
         driveByTime(0,5.0);
         wristServo.setPosition(0.8);
@@ -333,10 +324,8 @@ public class BasicOmniAutoLeft extends LinearOpMode {
         hang.setPower(0);
 
     }
-}
-
     //arm = hand, grabber = wrist, wrist=arm
-    /*public void patrick(){
+    public void patrick(){
         //Mr. Krabs with another sample
         wristServo.setPosition(0.8);
         grabber.setPosition(1);
@@ -404,4 +393,4 @@ public class BasicOmniAutoLeft extends LinearOpMode {
 
 
 }
-*/
+
