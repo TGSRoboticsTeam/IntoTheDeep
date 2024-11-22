@@ -67,7 +67,7 @@ import org.firstinspires.ftc.robotcore.external.Telemetry;
  * Remove or comment out the @Disabled line to add this OpMode to the Driver Station OpMode list
  */
 
-@Autonomous(name="Omni Auto Left", group="Linear OpMode")
+@Autonomous(name="Basic: Omni Auto Left", group="Linear OpMode")
 //@Disabled
 public class BasicOmniAutoLeft extends LinearOpMode {
 

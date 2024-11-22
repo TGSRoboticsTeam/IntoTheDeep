@@ -130,13 +130,13 @@ public class ODO_OmniAutoLeft extends LinearOpMode {
         odo.setEncoderDirections(GoBildaPinpointDriver.EncoderDirection.FORWARD, GoBildaPinpointDriver.EncoderDirection.FORWARD);
         odo.resetPosAndIMU();
         // Wait for the game to start (driver presses START)
-         telemetry.addData("Status", "Initialized");
-         telemetry.update();
+        telemetry.addData("Status", "Initialized");
+        telemetry.update();
         odo.update();
         waitForStart();
         runtime.reset();
 
-       while (opModeIsActive()) {
+        while (opModeIsActive()) {
             odo.update();
             telemetry.addData("ODO X1:", odo.getPosX());
             telemetry.update();
@@ -161,7 +161,7 @@ public class ODO_OmniAutoLeft extends LinearOpMode {
 
 
     public void driveByTime(double power,double time ){
-            // Send calculated power to wheels
+        // Send calculated power to wheels
         runtime.reset();
         while(runtime.seconds() < time) {
             leftFrontDrive.setPower(power);
@@ -171,7 +171,7 @@ public class ODO_OmniAutoLeft extends LinearOpMode {
         }
 
 
-   }
+    }
     public void strafeByTime(double power,double time ){
         // Send calculated power to wheels
         //move sideways
@@ -184,7 +184,6 @@ public class ODO_OmniAutoLeft extends LinearOpMode {
         }
 
     }
-
 
     public void bestRotateByTime(double power, double time){
         runtime.reset();
@@ -224,9 +223,10 @@ public class ODO_OmniAutoLeft extends LinearOpMode {
         double startY = odo.getPosY();
         //move in +X direction
         if(distanceX>0) {
-            while (odo.getPosX() - startX<distanceX) {
+            while (odo.getPosX() - startX<distanceX){
                 telemetry.addData("ODO X:Move", " "+odo.getPosX(),startX,distanceX);
                 driveByTime(.5, .1);
+                odo.update();
             }
         }
         driveByTime(0,5);
@@ -394,4 +394,3 @@ public class ODO_OmniAutoLeft extends LinearOpMode {
 
 
 }
-
