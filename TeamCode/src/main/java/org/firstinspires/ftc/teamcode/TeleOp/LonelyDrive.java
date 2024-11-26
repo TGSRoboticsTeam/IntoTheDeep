@@ -94,7 +94,7 @@ public class LonelyDrive extends LinearOpMode {
 
             boolean armPosScoop = gamepad1.dpad_right;
             boolean armPosUp = gamepad1.dpad_up;
-            boolean armPosFlat = gamepad1.dpad_left;
+            boolean armPosBack = gamepad1.dpad_left;
             boolean armPosDown = gamepad1.dpad_down;
 
             // Drive
@@ -170,18 +170,18 @@ public class LonelyDrive extends LinearOpMode {
             telemetry.addData("Wrist Servo", wristServo.getPosition());
             telemetry.addData("Grabber Servo", grabber.getPosition());*/
             //*
-            if (armPosDown) { // right (good) x = 0.055
-                armServo.setPosition(0.155); // down 0.1 + x
-                wristServo.setPosition(1.1); // down 0.9 + 2x
+            if (armPosDown) { // right (good)
+                armServo.setPosition(0.21); // down 0.20 also works ok
+                wristServo.setPosition(0.97); // down
             }else if (armPosUp) { // up (good)
-                armServo.setPosition(0.5); // up
+                armServo.setPosition(0.55); // up
                 wristServo.setPosition(1.0); // up
-            }else if (armPosFlat) { // left (good)
-                armServo.setPosition(0.3); // flat
-                wristServo.setPosition(0.8); // flat
+            }else if (armPosBack) { // left (good)
+                armServo.setPosition(0.75); // back
+                wristServo.setPosition(0.62); // back 0.62
             }else if (armPosScoop) { // down (good)
-                armServo.setPosition(0); // scoop
-                wristServo.setPosition(0.57); // scoop 0.55
+                armServo.setPosition(0.01); // scoop 0.0
+                wristServo.setPosition(0.56); // scoop 0.56
             }
 
             // Grabbing
